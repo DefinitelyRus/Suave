@@ -34,7 +34,8 @@ A 2D top-down game where you dodge projectiles, gain adrenaline, and defeat your
 ### HUD
 - Health bar appears directly above the player.
 - DMG Bonus appears at the bottom right of the HUD.
-- 
+- Current level appears at the bottom left of the HUD.
+- Time remaining appears at the top-center of the HUD.
 
 
 ## Level
@@ -68,7 +69,6 @@ Combine all enemy types.
 Boss fight.
 - Enemy count: `2`
 - Enemy types: Boss
-- Time limit: 
 
 ### Game End Conditions
 #### Win
