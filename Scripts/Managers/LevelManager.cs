@@ -13,7 +13,6 @@ internal static class LevelManager {
 	#region General
 
 	public static void Init() {
-		//TODO: Create enemy types, then levels.
 		Levels = [
 			// Level 1
 			new Level(
@@ -71,6 +70,8 @@ internal static class LevelManager {
 				"Level 5"
 			)
 		];
+
+
 	}
 
 	public static void Update(float delta) {
