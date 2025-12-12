@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using Raylib_cs;
 using Suave.Scripts.Entities;
 using Suave.Scripts.Managers;
 namespace Suave.Scripts.Implementations;
@@ -87,6 +86,8 @@ internal class Player(
 	public override void Kill() {
 		//TODO: AVFX here.
 
+		//TODO: Game Over logic here.
+
 		Despawn();
 	}
 
@@ -148,6 +149,8 @@ internal class Player(
 	public void Dash() {
 		if (DashCooldownRemaining > 0) return;
 
+		//TODO: AVFX here.
+
 		//Check if there are any enemies in the dash direction within a certain range.
 		Enemy[] enemies = [.. EntityManager
 			.GetAllEntitiesInRadius<Character>(Position, DashDistance)
@@ -155,8 +158,6 @@ internal class Player(
 			.Where(e => Vector2.Dot(Vector2.Normalize(e.Position - Position), FaceDirection) > DashHitTolerance)
 			.OrderBy(e => Vector2.Distance(Position, e.Position))
 		];
-
-		//TODO: AVFX here.
 
 		// Dash normally, apply cooldown.
 		if (enemies.Length == 0) {
