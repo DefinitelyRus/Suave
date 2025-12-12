@@ -82,7 +82,7 @@ internal abstract class Enemy(
 
 	#endregion
 
-	#region Actions
+	#region Avoidance
 
 	public float AggroRange { get; protected set; } = aggroRange;
 	public float AvoidRange { get; protected set; } = avoidRange;
