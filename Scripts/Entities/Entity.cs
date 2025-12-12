@@ -5,24 +5,31 @@ using Suave.Scripts.Tools;
 
 namespace Suave.Scripts.Entities;
 
-internal abstract class Entity(string name, string entityId) {
+internal abstract class Entity {
 
-	#region Entity Info
+	#region General
 
 	/// <summary>
 	/// The visual name of the entity.
 	/// </summary>
-	public string Name { get; set; } = name;
+	public string Name { get; set; }
 
 	/// <summary>
 	/// The unique name for the entity type.
 	/// </summary>
-	public string EntityId { get; protected set; } = entityId;
+	public string EntityId { get; protected set; }
 
 	/// <summary>
 	/// The current position of the entity in the game world.
 	/// </summary>
 	public Vector2 Position { get; set; } = Vector2.Zero;
+
+	public Entity(string name, string entityId) {
+		Name = name;
+		EntityId = entityId;
+
+		EntityManager.RegisterEntity(this);
+	}
 
 	/// <summary>
 	/// Updates the entity's state every frame.
