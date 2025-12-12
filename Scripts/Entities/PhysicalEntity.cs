@@ -2,7 +2,7 @@
 
 namespace Suave.Scripts.Entities;
 
-internal abstract class PhysicalEntity(string name, string entityId, float hitRadius = 16f) : Entity(name, entityId) {
+internal abstract class PhysicalEntity(string name, string entityId, Vector2 position, float hitRadius = 16f) : Entity(name, entityId, position) {
 	public float HitRadius { get; protected set; } = hitRadius;
 
 	public bool CollidesAt(Vector2 point) {

@@ -24,9 +24,10 @@ internal abstract class Entity {
 	/// </summary>
 	public Vector2 Position { get; set; } = Vector2.Zero;
 
-	public Entity(string name, string entityId) {
+	public Entity(string name, string entityId, Vector2 position) {
 		Name = name;
 		EntityId = entityId;
+		Position = position;
 
 		EntityManager.RegisterEntity(this);
 	}
