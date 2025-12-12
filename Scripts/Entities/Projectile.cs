@@ -78,14 +78,12 @@ internal class Projectile : PhysicalEntity {
 
 	protected float RenderMaxDistance = 2000f;
 
-	public void Launch(Vector2 direction) {
+	public virtual void Launch(Vector2 direction) {
 		Direction = Vector2.Normalize(direction);
 		IsLaunched = true;
-
-		//TODO: AVFX here.
 	}
 
-	public void Launch(PhysicalEntity target) {
+	public virtual void Launch(PhysicalEntity target) {
 		Vector2 targetPosition = target.Position;
 		Vector2 directionToTarget = Vector2.Normalize(targetPosition - Position);
 		Launch(directionToTarget);
