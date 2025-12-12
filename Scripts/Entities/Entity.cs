@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Raylib_cs;
 using Suave.Scripts.Managers;
 using Suave.Scripts.Tools;
 
@@ -83,6 +84,24 @@ internal abstract class Entity(string name, string entityId) {
 		}
 
 		InstanceId = instanceId;
+	}
+
+	#endregion
+
+	#region Visual Handling
+
+	/// <summary>
+	/// The current texture of the entity, usually the current frame from this instance's <see cref="CurrentAnimation"/>.
+	/// </summary>
+	public Texture2D CurrentTexture { get; set; }
+
+	/// <summary>
+	/// Sets the position of the entity where the given position is the center of the entity.
+	/// </summary>
+	/// <param name="centeredPosition">The center point of the entity.</param>
+	public void SetCenteredPosition(Vector2 centeredPosition) {
+		Vector2 textureSize = new(CurrentTexture.Width, CurrentTexture.Height);
+		Position = centeredPosition - (textureSize / 2);
 	}
 
 	#endregion
