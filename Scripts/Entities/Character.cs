@@ -48,7 +48,7 @@ internal abstract class Character : PhysicalEntity {
 
 	public override void Render(float _) {
 		float rotation = Utilities.GetAngle(FaceDirection);
-		SpriteRenderer.Render(EntityId, Position, new Vector2(HitRadius * 2, HitRadius * 2), rotation);
+		SpriteRenderer.Render(EntityId, Position, 0.2f, rotation);
 	}
 
 	public virtual void ResetContemporaryValues() {
