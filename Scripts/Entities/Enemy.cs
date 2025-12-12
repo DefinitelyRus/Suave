@@ -34,6 +34,9 @@ internal abstract class Enemy(
 		base.Update(delta);
 
 		if (EntityManager.Player == null) return;
+
+		UpdateState(EntityManager.Player, delta);
+		EnactStateBehavior(EntityManager.Player, delta);
 	}
 
 	#endregion
