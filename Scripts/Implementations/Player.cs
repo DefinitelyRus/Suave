@@ -143,6 +143,8 @@ internal class Player(
 
 	public float DashHitTolerance { get; protected set; } = dashHitTolerance;
 
+	public const int DashHitDamageBonus = 2;
+
 	public void Dash() {
 		if (DashCooldownRemaining > 0) return;
 
@@ -168,6 +170,9 @@ internal class Player(
 		else {
 			Position = enemies[0].Position;
 			DashCooldownRemaining = DashHitCooldown;
+
+			// Damage Enemy
+			enemies[0].TakeDamage(Damage + DamageBonus + DashHitDamageBonus);
 
 			//TODO: AVFX here.
 
