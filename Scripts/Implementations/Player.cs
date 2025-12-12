@@ -77,8 +77,8 @@ internal class Player(
 
 		// Failed to dodge.
 		if (distanceToProjectile <= HitRadius) {
-			//Character self = this;
-			//self.TakeDamage(projectile.Owner.Damage);
+			Character self = this;
+			self.TakeDamage(projectile.Owner.Damage);
 
 			Kill();
 		}
