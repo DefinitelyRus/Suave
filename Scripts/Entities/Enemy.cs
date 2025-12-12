@@ -47,7 +47,7 @@ internal abstract class Enemy(
 
 	public EnemyState CurrentState { get; protected set; } = EnemyState.Idle;
 
-	private void UpdateState(Character targetCharacter, float _delta) {
+	private void UpdateState(Character targetCharacter, float _) {
 		float distanceToTarget = Vector2.Distance(Position, targetCharacter.Position);
 
 		if (distanceToTarget <= AvoidRange) CurrentState = EnemyState.Avoiding;
