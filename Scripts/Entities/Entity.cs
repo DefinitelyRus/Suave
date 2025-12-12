@@ -77,6 +77,10 @@ internal abstract class Entity(string name, string entityId) {
 	/// </summary>
 	public Texture2D CurrentTexture { get; set; }
 
+	public void Render() {
+		Raylib.DrawTextureV(CurrentTexture, Position, Color.White);
+	}
+
 	/// <summary>
 	/// Sets the position of the entity where the given position is the center of the entity.
 	/// </summary>
