@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Raylib_cs;
 using Suave.Scripts.Entities;
 using Suave.Scripts.Implementations;
 using Suave.Scripts.Tools;
@@ -15,6 +16,10 @@ internal static class EntityManager {
 
 	public static Player? Player = null;
 
+	private static List<Entity> RegisterQueue = [];
+
+	private static List<Entity> UnregisteredEntities = [];
+
 	/// <summary>
 	/// Registers an entity and spawns it in the game world.
 	/// <br/><br/>
@@ -25,43 +30,12 @@ internal static class EntityManager {
 	/// </remarks>
 	/// <param name="entity">The entity to add to the game world.</param>
 	public static void RegisterEntity(Entity entity) {
-		AssignInstanceId(entity);
-
-		switch (entity) {
-			case Character character:
-				if (Characters.Contains(character)) {
-					Log.Warn(() => $"Character entity '{character.InstanceId}' is already registered.");
-					return;
-				}
-
-				if (character is Player playerCharacter) Player = playerCharacter;
-				else Characters.Add(character);
-				break;
-
-			case Projectile projectile:
-				if (Projectiles.Contains(projectile)) {
-					Log.Warn(() => $"Projectile entity '{projectile.InstanceId}' is already registered.");
-					return;
-				}
-
-				Projectiles.Add(projectile);
-				break;
-
-			case Particle particle:
-				if (Particles.Contains(particle)) {
-					Log.Warn(() => $"Particle entity '{particle.InstanceId}' is already registered.");
-					return;
-				}
-
-				Particles.Add(particle);
-				break;
-
-			default:
-				Log.Err(() => $"Entity '{entity.InstanceId}' of type '{entity.GetType().Name}' is not categorized specifically.");
-				break;
+		if (RegisterQueue.Contains(entity)) {
+			Log.Warn(() => $"Entity '{entity.InstanceId}' is already marked for registration.");
+			return;
 		}
 
-		Entities.Add(entity);
+		RegisterQueue.Add(entity);
 	}
 
 	/// <summary>
@@ -79,41 +53,90 @@ internal static class EntityManager {
 	/// </remarks>
 	/// <param name="entity">The entity to unregister. Must implement <see cref="Entity"/> and be previously registered.</param>
 	public static void UnregisterEntity(Entity entity) {
-		switch (entity) {
-			case Character character:
-				if (!Characters.Contains(character)) {
-					Log.Warn(() => $"Character entity '{character.InstanceId}' is not registered.");
-					return;
-				}
-
-				if (character is Player playerCharacter) Player = null;
-				else Characters.Remove(character);
-				break;
-
-			case Projectile projectile:
-				if (!Projectiles.Contains(projectile)) {
-					Log.Warn(() => $"Projectile entity '{projectile.InstanceId}' is not registered.");
-					return;
-				}
-
-				Projectiles.Remove(projectile);
-				break;
-
-			case Particle particle:
-				if (!Particles.Contains(particle)) {
-					Log.Warn(() => $"Particle entity '{particle.InstanceId}' is not registered.");
-					return;
-				}
-
-				Particles.Remove(particle);
-				break;
-
-			default:
-				Log.Err(() => $"Entity '{entity.InstanceId}' of type '{entity.GetType().Name}' is not categorized specifically.");
-				break;
+		if (UnregisteredEntities.Contains(entity)) {
+			Log.Warn(() => $"Entity '{entity.InstanceId}' is already marked for unregistration.");
+			return;
 		}
 
-		Entities.Remove(entity);
+		UnregisteredEntities.Add(entity);
+	}
+
+	public static void ProcessEntityRegistration(float _) {
+		foreach (Entity entity in RegisterQueue) {
+			switch (entity) {
+				case Character character:
+					if (!Characters.Contains(character)) {
+						Log.Warn(() => $"Character entity '{character.InstanceId}' is not registered.");
+						return;
+					}
+
+					if (character is Player playerCharacter) Player = null;
+					else Characters.Remove(character);
+					break;
+
+				case Projectile projectile:
+					if (!Projectiles.Contains(projectile)) {
+						Log.Warn(() => $"Projectile entity '{projectile.InstanceId}' is not registered.");
+						return;
+					}
+
+					Projectiles.Remove(projectile);
+					break;
+
+				case Particle particle:
+					if (!Particles.Contains(particle)) {
+						Log.Warn(() => $"Particle entity '{particle.InstanceId}' is not registered.");
+						return;
+					}
+
+					Particles.Remove(particle);
+					break;
+
+				default:
+					Log.Err(() => $"Entity '{entity.InstanceId}' of type '{entity.GetType().Name}' is not categorized specifically.");
+					break;
+			}
+
+			Entities.Remove(entity);
+		}
+
+		foreach (Entity entity in UnregisteredEntities) {
+			switch (entity) {
+				case Character character:
+					if (!Characters.Contains(character)) {
+						Log.Warn(() => $"Character entity '{character.InstanceId}' is not registered.");
+						return;
+					}
+
+					if (character is Player playerCharacter) Player = null;
+					else Characters.Remove(character);
+					break;
+
+				case Projectile projectile:
+					if (!Projectiles.Contains(projectile)) {
+						Log.Warn(() => $"Projectile entity '{projectile.InstanceId}' is not registered.");
+						return;
+					}
+
+					Projectiles.Remove(projectile);
+					break;
+
+				case Particle particle:
+					if (!Particles.Contains(particle)) {
+						Log.Warn(() => $"Particle entity '{particle.InstanceId}' is not registered.");
+						return;
+					}
+
+					Particles.Remove(particle);
+					break;
+
+				default:
+					Log.Err(() => $"Entity '{entity.InstanceId}' of type '{entity.GetType().Name}' is not categorized specifically.");
+					break;
+			}
+
+			Entities.Remove(entity);
+		}
 	}
 
 	/// <summary>
