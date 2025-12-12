@@ -8,6 +8,8 @@ internal class Program {
         Raylib.SetTraceLogLevel(TraceLogLevel.Warning);
         GameRenderer.Init();
         SoundPlayer.Init();
+        GameManager.Init();
+        LevelManager.Init();
         
         while (!Raylib.WindowShouldClose()) {
             Raylib.BeginDrawing();
