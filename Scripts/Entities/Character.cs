@@ -70,11 +70,9 @@ internal abstract class Character : PhysicalEntity {
 
 		if (Health < 0) {
 			Health = 0;
-			Kill();
+			Despawn();
 		}
 	}
-
-	public abstract void Kill();
 
 	#endregion
 
@@ -82,7 +80,6 @@ internal abstract class Character : PhysicalEntity {
 
 	public Vector2 FaceDirection { get; protected set; } = new Vector2(0, -1);
 	public Vector2 MoveDirection { get; protected set; } = Vector2.Zero;
-	public float MoveSpeed { get; protected set; } = moveSpeed;
 	public float MoveSpeed { get; protected set; }
 
 	/// <summary>

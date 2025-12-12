@@ -80,14 +80,8 @@ internal class Player(
 			//Character self = this;
 			//self.TakeDamage(projectile.Owner.Damage);
 
-			Kill();
+			Despawn();
 		}
-	}
-
-	public override void Kill() {
-		//TODO: AVFX here.
-
-		Despawn();
 	}
 
 	#endregion
