@@ -142,12 +142,33 @@ internal static class LevelManager {
 		Character? character = null;
 
 		switch (characterType) {
+			case Type t when t == typeof(EnemyGrunt):
+				character = new EnemyGrunt(position);
+				break;
+
+			case Type t when t == typeof(EnemyBetterGrunt):
+				character = new EnemyBetterGrunt(position);
+				break;
+
+			case Type t when t == typeof(EnemyBerserker):
+				character = new EnemyBerserker(position);
+				break;
+
+			case Type t when t == typeof(EnemySniper):
+				character = new EnemySniper(position);
+				break;
+
+			case Type t when t == typeof(EnemyBoss):
+				character = new EnemyBoss(position);
+				break;
+
 			default:
 				Log.Err(() => $"Cannot create character instance of unsupported type '{characterType.Name}'.");
 				return null;
 		}
 
 		EntityManager.RegisterEntity(character);
+		return character;
 	}
 
 	#endregion
