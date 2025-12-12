@@ -62,7 +62,16 @@ internal static class EntityManager {
 	}
 
 	public static void ProcessEntityRegistration(float _) {
+
+		#region Registration
+
+		List<Entity> doneRegistration = [];
+
 		foreach (Entity entity in RegisterQueue) {
+			Log.Me(() => $"Registering {entity.EntityId}...");
+
+			AssignInstanceId(entity);
+
 			switch (entity) {
 				case Character character:
 					if (!Characters.Contains(character)) {
@@ -70,37 +79,51 @@ internal static class EntityManager {
 						return;
 					}
 
-					if (character is Player playerCharacter) Player = null;
-					else Characters.Remove(character);
+					if (character is Player playerCharacter) {
+						Log.Me(() => $"Registered {character.InstanceId} as the Player character.");
+						Player = playerCharacter;
+					}
+
+					Characters.Add(character);
 					break;
 
 				case Projectile projectile:
-					if (!Projectiles.Contains(projectile)) {
-						Log.Warn(() => $"Projectile entity '{projectile.InstanceId}' is not registered.");
+					if (Projectiles.Contains(projectile)) {
+						Log.Warn(() => $"Projectile entity '{projectile.InstanceId}' is already registered.");
 						return;
 					}
 
-					Projectiles.Remove(projectile);
+					Projectiles.Add(projectile);
 					break;
 
 				case Particle particle:
-					if (!Particles.Contains(particle)) {
-						Log.Warn(() => $"Particle entity '{particle.InstanceId}' is not registered.");
+					if (Particles.Contains(particle)) {
+						Log.Warn(() => $"Particle entity '{particle.InstanceId}' is already registered.");
 						return;
 					}
 
-					Particles.Remove(particle);
+					Particles.Add(particle);
 					break;
 
 				default:
-					Log.Err(() => $"Entity '{entity.InstanceId}' of type '{entity.GetType().Name}' is not categorized specifically.");
+					Log.Err(() => $"Entity '{entity.InstanceId}' of type '{entity.GetType().Name}' is already categorized specifically.");
 					break;
 			}
-
-			Entities.Remove(entity);
+			Entities.Add(entity);
+			doneRegistration.Add(entity);
 		}
+
+		foreach (Entity entity in doneRegistration) RegisterQueue.Remove(entity);
+
+		#endregion
+
+		#region Unregistration
+
+		List<Entity> doneUnregistration = [];
 
 		foreach (Entity entity in UnregisteredEntities) {
+			Log.Me(() => $"Unregistering {entity.InstanceId}...");
+
 			switch (entity) {
 				case Character character:
 					if (!Characters.Contains(character)) {
@@ -109,7 +132,7 @@ internal static class EntityManager {
 					}
 
 					if (character is Player playerCharacter) Player = null;
-					else Characters.Remove(character);
+					Characters.Remove(character);
 					break;
 
 				case Projectile projectile:
@@ -137,6 +160,10 @@ internal static class EntityManager {
 
 			Entities.Remove(entity);
 		}
+
+		foreach (Entity entity in doneUnregistration) UnregisteredEntities.Remove(entity);
+
+		#endregion
 	}
 
 	/// <summary>
