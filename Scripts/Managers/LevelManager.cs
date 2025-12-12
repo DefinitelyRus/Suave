@@ -14,6 +14,63 @@ internal static class LevelManager {
 
 	public static void Init() {
 		//TODO: Create enemy types, then levels.
+		Levels = [
+			// Level 1
+			new Level(
+				timeLimit: 120f,
+				waveCount: 3,
+				enemiesToSpawn: [
+					new PackedEnemy(typeof(EnemyGrunt), 3)
+				],
+				"Level 1"
+			),
+
+			// Level 2
+			new Level(
+				timeLimit: 180f,
+				waveCount: 3,
+				enemiesToSpawn: [
+					new PackedEnemy(typeof(EnemyGrunt), 3),
+					new PackedEnemy(typeof(EnemyBetterGrunt), 3)
+				],
+				"Level 2"
+			),
+
+			// Level 3
+			new Level(
+				timeLimit: 180f,
+				waveCount: 4,
+				enemiesToSpawn: [
+					new PackedEnemy(typeof(EnemyBerserker), 2),
+					new PackedEnemy(typeof(EnemySniper), 2)
+				],
+				"Level 3"
+			),
+
+			// Level 4
+			new Level(
+				timeLimit: 180f,
+				waveCount: 3,
+				enemiesToSpawn: [
+					new PackedEnemy(typeof(EnemyGrunt), 2),
+					new PackedEnemy(typeof(EnemyBetterGrunt), 3),
+					new PackedEnemy(typeof(EnemyBerserker), 2),
+					new PackedEnemy(typeof(EnemySniper), 1),
+				],
+				"Level 4"
+			),
+
+			// Level 5
+			new Level(
+				timeLimit: 180f,
+				waveCount: 3,
+				enemiesToSpawn: [
+					new PackedEnemy(typeof(EnemyGrunt), 3),
+					new PackedEnemy(typeof(EnemyBetterGrunt), 3)
+				],
+				"Level 5"
+			)
+		];
 	}
 
 	public static void Update(float delta) {
