@@ -5,6 +5,7 @@ namespace Suave.Scripts.Entities;
 internal abstract class Character(
 	string name,
 	string entityId,
+	Projectile projectile,
 	float hitRadius = 16,
 	int maxHealth = 10,
 	int damage = 1,
@@ -36,12 +37,14 @@ internal abstract class Character(
 	public float AttackRange { get; protected set; } = attackRange;
 	public float AttackCooldown { get; protected set; } = attackCooldown;
 	protected float AttackCooldownRemaining { get; set; } = 0f;
+	public Projectile Projectile { get; protected set; } = projectile;
 
 	public void Attack(Character target) {
 		if (AttackCooldownRemaining > 0) return;
 
 		Vector2 directionToTarget = Vector2.Normalize(target.Position - Position);
 
+		Projectile.Instantiate(directionToTarget);
 		AttackCooldownRemaining = AttackCooldown;
 	}
 
