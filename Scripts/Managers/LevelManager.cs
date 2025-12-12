@@ -169,18 +169,6 @@ internal static class LevelManager {
 				Log.Err(() => $"Failed to create character instance of type '{characterType.Name}'.");
 				return;
 			}
-
-			// Remove character and try again if colliding with another character.
-			bool isColliding = EntityManager
-				.GetAllEntitiesInRadius<Character>(spawnPosition, spawnedCharacter.HitRadius)
-				.OrderBy(e => Vector2.Distance(e.Position, spawnPosition))
-				.Any();
-
-			if (isColliding) {
-				spawnedCharacter.Despawn();
-				spawnedCharacter = null;
-				continue;
-			}
 		}
 
 		//TODO: AVFX here.
