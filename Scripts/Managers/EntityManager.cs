@@ -74,8 +74,8 @@ internal static class EntityManager {
 
 			switch (entity) {
 				case Character character:
-					if (!Characters.Contains(character)) {
-						Log.Warn(() => $"Character entity '{character.InstanceId}' is not registered.");
+					if (Characters.Contains(character)) {
+						Log.Warn(() => $"Character entity '{character.InstanceId}' is already registered.");
 						return;
 					}
 
@@ -267,7 +267,7 @@ internal static class EntityManager {
 			if (other == entity) continue;
 
 			if (other.InstanceId == entity.InstanceId) {
-				Log.Warn(() => $"Instance ID collision detected: '{instanceId}'. Generating a new one.");
+				Log.Warn(() => $"Instance ID collision detected: '{entity.InstanceId}' == '{other.InstanceId}'. Generating a new one.");
 				goto GenerateId;
 			}
 		}
