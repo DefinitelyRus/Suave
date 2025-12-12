@@ -1,0 +1,155 @@
+﻿using System.Numerics;
+using Raylib_cs;
+using Suave.Scripts.Entities;
+using Suave.Scripts.Implementations;
+using Suave.Scripts.Levels;
+using Suave.Scripts.Objects;
+using Suave.Scripts.Tools;
+
+namespace Suave.Scripts.Managers;
+
+internal static class LevelManager {
+
+	#region General
+
+	public static void Init() {
+		//TODO: Create enemy types, then levels.
+	}
+
+	public static void Update(float delta) {
+		UpdateTimer(delta);
+	}
+
+	#endregion
+
+	#region Level Management
+
+	public static uint CurrentLevelIndex = 0;
+
+	public static Level[] Levels = [];
+	public static Level? CurrentLevel = null;
+
+	public static void StartLevel(uint levelIndex) {
+		if (levelIndex >= Levels.Length) {
+			Log.Err(() => $"Cannot start level at index '{levelIndex}': Index out of bounds.");
+			return;
+		}
+
+		CurrentLevelIndex = levelIndex;
+		CurrentLevel = Levels[CurrentLevelIndex];
+		LevelTimer = CurrentLevel.TimeLimit;
+
+		// Reset player state.
+		Player player = EntityManager.Player!;
+		player.ResetContemporaryValues();
+		player.Position = PlayerSpawnPosition;
+
+		// Spawn enemies asynchronously.
+		Task.Run(() => SpawnEnemies(CurrentLevel));
+	}
+
+	#endregion
+
+	#region Wave Management
+
+	private static uint CurrentWave = 1;
+
+	public static void StartWave(uint waveIndex) {
+		CurrentWave = waveIndex;
+	}
+
+	#endregion
+
+	#region Timer
+
+	public static float LevelTimer = 0.0f;
+
+	public static void UpdateTimer(float delta) {
+		LevelTimer -= delta;
+		if (LevelTimer < 0) LevelTimer = 0;
+	}
+
+	#endregion
+
+	#region Entity Spawning
+
+	private static readonly Vector2 SpawnAreaStart = new(128, 72);
+	private static readonly Vector2 SpawnAreaEnd = new(1152, 648);
+	private static readonly Vector2 PlayerSpawnPosition = new(640, 360);
+
+	public static Vector2 GetRandomSpawnPosition() {
+		float x = Raylib.GetRandomValue((int) SpawnAreaStart.X, (int) SpawnAreaEnd.X);
+		float y = Raylib.GetRandomValue((int) SpawnAreaStart.Y, (int) SpawnAreaEnd.Y);
+
+		return new(x, y);
+	}
+
+	public static void Spawn(Type characterType, Vector2? position = null) {
+		Character? spawnedCharacter = null;
+
+		while (spawnedCharacter == null) {
+			Vector2 spawnPosition = (position == null) ? GetRandomSpawnPosition() : position.Value;
+
+			// Return if trying to spawn non-player before player.
+			bool isTypePlayer = characterType == typeof(Player);
+			bool hasRegisteredPlayer = EntityManager.Player == null;
+			if (!isTypePlayer && !hasRegisteredPlayer) {
+				Log.Warn(() => "The player character must be spawned before other characters.");
+				return;
+			}
+
+			// Skip if too close to player.
+			if (!isTypePlayer) {
+				Vector2 playerPosition = EntityManager.Player!.Position;
+				float distanceToPlayer = Vector2.Distance(spawnPosition, playerPosition);
+				if (distanceToPlayer < 240) continue;
+			}
+
+			// Create character instance.
+			spawnedCharacter = CreateCharacterInstance(characterType, spawnPosition);
+
+			if (spawnedCharacter == null) {
+				Log.Err(() => $"Failed to create character instance of type '{characterType.Name}'.");
+				return;
+			}
+
+			// Remove character and try again if colliding with another character.
+			bool isColliding = EntityManager
+				.GetAllEntitiesInRadius<Character>(spawnPosition, spawnedCharacter.HitRadius)
+				.OrderBy(e => Vector2.Distance(e.Position, spawnPosition))
+				.Any();
+
+			if (isColliding) {
+				spawnedCharacter.Despawn();
+				spawnedCharacter = null;
+				continue;
+			}
+		}
+
+		//TODO: AVFX here.
+	}
+
+	private static void SpawnEnemies(Level level) {
+		foreach (PackedEnemy packedEnemy in level.Enemies) {
+			for (int i = 0; i < packedEnemy.Count; i++) {
+				Spawn(packedEnemy.EnemyType);
+				Thread.Sleep(200);
+			}
+		}
+	}
+
+	public static Character? CreateCharacterInstance(Type characterType, Vector2 position) {
+		Character? character = null;
+
+		switch (characterType) {
+			default:
+				Log.Err(() => $"Cannot create character instance of unsupported type '{characterType.Name}'.");
+				return null;
+		}
+
+		EntityManager.RegisterEntity(character);
+	}
+
+	#endregion
+
+}

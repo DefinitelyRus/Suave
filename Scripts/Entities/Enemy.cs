@@ -91,15 +91,18 @@ internal abstract class Enemy(
 
 	#endregion
 
-	#region Actions
+	#region Avoidance
 
 	public float AggroRange { get; protected set; } = aggroRange;
 	public float AvoidRange { get; protected set; } = avoidRange;
 
+	public const float AvoidSpeedMultiplier = 2f;
+	public const float AvoidDistanceBuffer = 1.2f;
+
 	public void AvoidCharacter(Character targetCharacter, float delta) {
 		Vector2 directionAwayFromTarget = Vector2.Normalize(Position - targetCharacter.Position);
-		Vector2 targetPosition = Position + directionAwayFromTarget * AvoidRange * 1.1f;
-		MoveTowards(targetPosition, delta);
+		Vector2 targetPosition = Position + directionAwayFromTarget * AvoidRange * AvoidDistanceBuffer;
+		MoveTowards(targetPosition, delta * AvoidSpeedMultiplier);
 	}
 
 	#endregion

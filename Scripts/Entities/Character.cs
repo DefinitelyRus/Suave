@@ -1,5 +1,7 @@
-﻿using System.Numerics;
+using System.Numerics;
 using Raylib_cs;
+using Suave.Scripts.Managers;
+using Suave.Scripts.Tools;
 
 namespace Suave.Scripts.Entities;
 
@@ -40,8 +42,22 @@ internal abstract class Character : PhysicalEntity {
 			AttackCooldownRemaining -= delta;
 			if (AttackCooldownRemaining < 0) AttackCooldownRemaining = 0;
 		}
+
+		Render(delta);
 	}
 
+	public override void Render(float _) {
+		float rotation = Utilities.GetAngle(FaceDirection);
+		SpriteRenderer.Render(EntityId, Position, new Vector2(HitRadius * 2, HitRadius * 2), rotation);
+	}
+
+	public virtual void ResetContemporaryValues() {
+		Position = Vector2.Zero;
+		FaceDirection = new Vector2(0, -1);
+		MoveDirection = Vector2.Zero;
+		AttackCooldownRemaining = 0f;
+		Health = MaxHealth;
+	}
 	#endregion
 
 	#region Combat
