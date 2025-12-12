@@ -42,7 +42,7 @@ internal class ResourceManager {
 
 	#region Sounds
 
-	public const string SoundPath = RootPath + "/Sounds";
+	public const string SoundPath = RootPath + "/Audio";
 
 	public static Dictionary<string, Sound> Sounds = [];
 
