@@ -46,7 +46,7 @@ internal abstract class Character(
 
 		Vector2 directionToTarget = Vector2.Normalize(target.Position - Position);
 
-		Projectile.Instantiate(directionToTarget);
+		Projectile.Launch(directionToTarget);
 		AttackCooldownRemaining = AttackCooldown;
 	}
 
