@@ -48,7 +48,6 @@ internal abstract class Entity(string name, string entityId) {
 	/// </summary>
 	public void Despawn() {
 		EntityManager.UnregisterEntity(this);
-		IsInstantiated = false;
 	}
 
 	/// <summary>
