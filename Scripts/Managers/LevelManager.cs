@@ -189,8 +189,8 @@ internal static class LevelManager {
 	private static void SpawnEnemies(Level level) {
 		foreach (PackedEnemy packedEnemy in level.Enemies) {
 			for (int i = 0; i < packedEnemy.Count; i++) {
-				Spawn(packedEnemy.EnemyType);
 				Thread.Sleep(200);
+				Spawn(packedEnemy.EnemyType);
 			}
 		}
 	}
