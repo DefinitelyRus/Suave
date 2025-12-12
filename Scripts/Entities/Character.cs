@@ -65,8 +65,8 @@ internal abstract class Character(
 
 	#region Movement
 
-	public Vector2 FaceDirection { get; protected set; }
-	public Vector2 MoveDirection { get; protected set; }
+	public Vector2 FaceDirection { get; protected set; } = new Vector2(0, -1);
+	public Vector2 MoveDirection { get; protected set; } = Vector2.Zero;
 	public float MoveSpeed { get; protected set; }
 
 	/// <summary>
