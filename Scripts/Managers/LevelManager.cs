@@ -101,8 +101,7 @@ internal static class LevelManager {
 		player.ResetContemporaryValues();
 		player.Position = PlayerSpawnPosition;
 
-		// Spawn enemies asynchronously.
-		Task.Run(() => SpawnEnemies(CurrentLevel));
+		StartWave();
 	}
 
 	#endregion
@@ -111,8 +110,28 @@ internal static class LevelManager {
 
 	private static uint CurrentWave = 1;
 
-	public static void StartWave(uint waveIndex) {
-		CurrentWave = waveIndex;
+	public static void StartWave() {
+		Task.Run(() => SpawnEnemies(CurrentLevel!));
+	}
+
+	public static void ScanWave(float _) {
+		Enemy[] remainingEnemies = [.. EntityManager
+			.Characters
+			.Where(c => c is Enemy)
+			.Cast<Enemy>()
+		];
+
+		if (remainingEnemies.Length != 0) return;
+
+		CurrentWave++;
+
+		if (CurrentWave > CurrentLevel!.Waves) {
+			Log.Me(() => "Level complete!");
+			StartLevel(CurrentLevelIndex + 1);
+			return;
+		}
+
+		Log.Me(() => $"Wave {CurrentWave} starting!");
 	}
 
 	#endregion
