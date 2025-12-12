@@ -93,7 +93,7 @@ internal class Player(
 	/// <summary>
 	/// For the Player character, attacks are always parries.
 	/// </summary>
-	public void Attack() {
+	public void Parry() {
 		if (AttackCooldownRemaining > 0) return;
 
 		// Check if there is an enemy within `ParryRange` in the `FaceDirection`.
