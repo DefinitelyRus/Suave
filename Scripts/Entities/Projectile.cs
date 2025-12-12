@@ -3,7 +3,7 @@ using Suave.Scripts.Managers;
 
 namespace Suave.Scripts.Entities;
 
-internal abstract class Projectile : PhysicalEntity {
+internal class Projectile : PhysicalEntity {
 
 	#region General
 
