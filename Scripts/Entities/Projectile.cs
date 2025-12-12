@@ -39,7 +39,7 @@ internal class Projectile : PhysicalEntity {
 		float distanceToOwner = Vector2.Distance(Position, Owner.Position);
 		bool tooClose = distanceToOwner < RenderMinDistance;
 		bool tooFar = distanceToOwner > RenderMaxDistance;
-		if (!tooClose & !tooFar) Render();
+		if (!tooClose & !tooFar) Render(delta);
 
 		Position += Direction * Speed * delta;
 
