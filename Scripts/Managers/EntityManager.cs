@@ -31,7 +31,7 @@ internal static class EntityManager {
 	/// <param name="entity">The entity to add to the game world.</param>
 	public static void RegisterEntity(Entity entity) {
 		if (RegisterQueue.Contains(entity)) {
-			Log.Warn(() => $"Entity '{entity.InstanceId}' is already marked for registration.");
+			Log.Warn(() => $"Entity '{entity.EntityId}' is already marked for registration.");
 			return;
 		}
 
@@ -54,7 +54,7 @@ internal static class EntityManager {
 	/// <param name="entity">The entity to unregister. Must implement <see cref="Entity"/> and be previously registered.</param>
 	public static void UnregisterEntity(Entity entity) {
 		if (UnregisteredEntities.Contains(entity)) {
-			Log.Warn(() => $"Entity '{entity.InstanceId}' is already marked for unregistration.");
+			Log.Warn(() => $"Entity '{entity.EntityId}' is already marked for unregistration.");
 			return;
 		}
 
