@@ -19,5 +19,7 @@ internal class Program {
 
 			Raylib.EndDrawing();
 		}
+
+        Raylib.CloseWindow();
 	}
 }
