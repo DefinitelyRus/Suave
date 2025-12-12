@@ -39,6 +39,13 @@ internal abstract class Character(
 		SpriteRenderer.Render(EntityId, Position, new Vector2(HitRadius * 2, HitRadius * 2), rotation);
 	}
 
+	public virtual void ResetContemporaryValues() {
+		Position = Vector2.Zero;
+		FaceDirection = new Vector2(0, -1);
+		MoveDirection = Vector2.Zero;
+		AttackCooldownRemaining = 0f;
+		Health = MaxHealth;
+	}
 	#endregion
 
 	#region Combat

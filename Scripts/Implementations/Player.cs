@@ -46,6 +46,12 @@ internal class Player(
 		base.Update(delta);
 	}
 
+	public override void ResetContemporaryValues() {
+		DamageBonus = 0;
+		DamageCooldownRemaining = 3f;
+		DashCooldownRemaining = 0f;
+	}
+
 	#endregion
 
 	#region Dodging & Taking Damage
