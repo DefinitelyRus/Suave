@@ -12,6 +12,7 @@ internal abstract class Enemy(
 	int damage = 1,
 	float attackRange = 64,
 	float attackCooldown = 1f,
+	float moveSpeed = 100f,
 	float aggroRange = 200f,
 	float avoidRange = 50f
 	) : Character(
@@ -23,7 +24,8 @@ internal abstract class Enemy(
 	maxHealth,
 	damage,
 	attackRange,
-	attackCooldown
+	attackCooldown,
+	moveSpeed
 	) {
 
 	#region General

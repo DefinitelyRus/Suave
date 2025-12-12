@@ -14,6 +14,7 @@ internal class Player(
 	int damage = 1,
 	float attackRange = 64,
 	float attackCooldown = 1f,
+	float moveSpeed = 100f,
 	float nearMissRange = 48.0f,
 	float damageCooldown = 0.5f,
 	float parryTolerance = 0.8f,
@@ -31,7 +32,8 @@ internal class Player(
 		maxHealth,
 		damage,
 		attackRange,
-		attackCooldown
+		attackCooldown,
+		moveSpeed
 	) {
 
 	#region General

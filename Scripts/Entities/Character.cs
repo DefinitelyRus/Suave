@@ -11,7 +11,8 @@ internal abstract class Character(
 	int maxHealth = 10,
 	int damage = 1,
 	float attackRange = 64,
-	float attackCooldown = 1f
+	float attackCooldown = 1f,
+	float moveSpeed = 100f
 	) :
 	PhysicalEntity(
 		name,
@@ -67,7 +68,7 @@ internal abstract class Character(
 
 	public Vector2 FaceDirection { get; protected set; } = new Vector2(0, -1);
 	public Vector2 MoveDirection { get; protected set; } = Vector2.Zero;
-	public float MoveSpeed { get; protected set; }
+	public float MoveSpeed { get; protected set; } = moveSpeed;
 
 	/// <summary>
 	/// Face towards the target position.
