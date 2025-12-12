@@ -237,6 +237,7 @@ internal static class EntityManager {
 		string instanceId = $"{entity.EntityId} #{randomNumber:D5}";
 
 		foreach (Entity other in Entities) {
+			if (other == entity) continue;
 
 			if (other.InstanceId == entity.InstanceId) {
 				Log.Warn(() => $"Instance ID collision detected: '{instanceId}'. Generating a new one.");
