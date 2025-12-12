@@ -156,11 +156,9 @@ internal static class LevelManager {
 			}
 
 			// Skip if too close to player.
-			if (!isTypePlayer) {
-				Vector2 playerPosition = EntityManager.Player!.Position;
-				float distanceToPlayer = Vector2.Distance(spawnPosition, playerPosition);
-				if (distanceToPlayer < 240) continue;
-			}
+			Vector2 playerPosition = EntityManager.Player!.Position;
+			float distanceToPlayer = Vector2.Distance(spawnPosition, playerPosition);
+			if (distanceToPlayer < 240) continue;
 
 			// Create character instance.
 			spawnedCharacter = CreateCharacterInstance(characterType, spawnPosition);
