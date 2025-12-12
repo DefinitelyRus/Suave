@@ -233,7 +233,7 @@ internal static class EntityManager {
 	/// <param name="entity">The entity to assign an Instance ID to.</param>
 	private static void AssignInstanceId(Entity entity) {
 		GenerateId:
-		int randomNumber = new Random().Next(0, 99999);
+		int randomNumber = Raylib.GetRandomValue(0, 99999);
 		string instanceId = $"{entity.EntityId} #{randomNumber:D5}";
 
 		foreach (Entity other in Entities) {
