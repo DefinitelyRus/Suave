@@ -85,8 +85,6 @@ The player loses the level when `HP == 0` or `Timer <= 0`.
 - DMG: `1`
 - Move Speed: Normal
 - Fire delay (s): `1.0`
-- Projectile Size: Normal
-- Projectile Speed: Normal
 - Attack Range: Normal
 
 ### Better Grunt
@@ -94,8 +92,6 @@ The player loses the level when `HP == 0` or `Timer <= 0`.
 - DMG: `2`
 - Move Speed: Normal
 - Fire delay (s): `1.0`
-- Projectile Size: Normal
-- Projectile Speed: Fast
 - Attack Range: Far
 
 ### Berserker
@@ -103,8 +99,6 @@ The player loses the level when `HP == 0` or `Timer <= 0`.
 - DMG: `1`
 - Move Speed: Very slow
 - Fire delay (s): `0.4`
-- Projectile Size: Small
-- Projectile Speed: Normal
 - Attack Range: Short
 
 ### Sniper
@@ -112,8 +106,6 @@ The player loses the level when `HP == 0` or `Timer <= 0`.
 - DMG: `3`
 - Move Speed: Very slow
 - Fire delay (s): `2.0`
-- Projectile Size: Normal
-- Projectile Speed: Fast
 - Attack Range: Far
 
 ### Boss
@@ -121,6 +113,4 @@ The player loses the level when `HP == 0` or `Timer <= 0`.
 - DMG: Based on fire delay (`1` to `5`, rounded off)
 - Move Speed: Fast
 - Fire delay (s): Random (`0.8` to `2.0`)
-- Projectile Size: Large
-- Projectile Speed: Fast
 - Attack Range: Far
