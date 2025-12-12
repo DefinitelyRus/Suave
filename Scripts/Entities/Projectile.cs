@@ -54,6 +54,10 @@ internal abstract class Projectile : PhysicalEntity {
 		}
 
 		// Check for collision
+		bool collided = CheckCharacterCollision(out Character? collidingCharacter);
+		if (!collided) return;
+
+		collidingCharacter!.TakeDamage(Owner.Damage);
 
 		//TODO: AVFX here.
 
@@ -91,5 +95,18 @@ internal abstract class Projectile : PhysicalEntity {
 		Launch(directionToTarget);
 	}
 
+	protected bool CheckCharacterCollision(out Character? collidingCharacter) {
+		// Check for collisions with entities.
+		Character[] characters = [.. EntityManager
+			.GetAllEntitiesInRadius<Character>(Position, HitRadius)
+			.Where(e => e != Owner)
+			.OrderBy(c => Vector2.Distance(Position, c.Position))
+		];
+
+		collidingCharacter = characters.Length > 0 ? characters[0] : null;
+		return characters.Length == 0;
+	}
+
 	#endregion
+
 }
