@@ -7,7 +7,7 @@ internal class Program {
     static void Main() {
         Raylib.SetTraceLogLevel(TraceLogLevel.Warning);
         GameRenderer.Init();
-        //GameManager.Init();
+        SoundPlayer.Init();
         
         while (!Raylib.WindowShouldClose()) {
             Raylib.BeginDrawing();

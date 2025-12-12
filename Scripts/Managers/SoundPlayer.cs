@@ -4,6 +4,10 @@ using Suave.Scripts.Tools;
 namespace Suave.Scripts.Managers;
 
 internal class SoundPlayer {
+
+	public static void Init() {
+		Raylib.InitAudioDevice();
+	}
 	public static void Play(Sound sound) {
 		Raylib.PlaySound(sound);
 	}
