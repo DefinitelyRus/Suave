@@ -81,7 +81,7 @@ The player loses the level when `HP == 0` or `Timer <= 0`.
 
 ## Enemies
 ### Grunt
-- HP: `10`
+- HP: `12`
 - DMG: `1`
 - Move Speed: Normal
 - Fire delay (s): `1.0`
@@ -105,7 +105,7 @@ The player loses the level when `HP == 0` or `Timer <= 0`.
 - HP: `10`
 - DMG: `3`
 - Move Speed: Very slow
-- Fire delay (s): `2.0`
+- Fire delay (s): `3.0`
 - Attack Range: Far
 
 ### Boss
