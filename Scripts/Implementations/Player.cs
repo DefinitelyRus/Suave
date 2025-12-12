@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using Raylib_cs;
 using Suave.Scripts.Entities;
 using Suave.Scripts.Managers;
 namespace Suave.Scripts.Implementations;
@@ -47,6 +46,12 @@ internal class Player(
 		base.Update(delta);
 	}
 
+	public override void ResetContemporaryValues() {
+		DamageBonus = 0;
+		DamageCooldownRemaining = 3f;
+		DashCooldownRemaining = 0f;
+	}
+
 	#endregion
 
 	#region Dodging & Taking Damage
@@ -77,8 +82,8 @@ internal class Player(
 
 		// Failed to dodge.
 		if (distanceToProjectile <= HitRadius) {
-			//Character self = this;
-			//self.TakeDamage(projectile.Owner.Damage);
+			Character self = this;
+			self.TakeDamage(projectile.Owner.Damage);
 
 			Kill();
 		}
@@ -86,6 +91,8 @@ internal class Player(
 
 	public override void Kill() {
 		//TODO: AVFX here.
+
+		//TODO: Game Over logic here.
 
 		Despawn();
 	}
@@ -143,8 +150,12 @@ internal class Player(
 
 	public float DashHitTolerance { get; protected set; } = dashHitTolerance;
 
+	public const int DashHitDamageBonus = 2;
+
 	public void Dash() {
 		if (DashCooldownRemaining > 0) return;
+
+		//TODO: AVFX here.
 
 		//Check if there are any enemies in the dash direction within a certain range.
 		Enemy[] enemies = [.. EntityManager
@@ -153,8 +164,6 @@ internal class Player(
 			.Where(e => Vector2.Dot(Vector2.Normalize(e.Position - Position), FaceDirection) > DashHitTolerance)
 			.OrderBy(e => Vector2.Distance(Position, e.Position))
 		];
-
-		//TODO: AVFX here.
 
 		// Dash normally, apply cooldown.
 		if (enemies.Length == 0) {
@@ -168,6 +177,9 @@ internal class Player(
 		else {
 			Position = enemies[0].Position;
 			DashCooldownRemaining = DashHitCooldown;
+
+			// Damage Enemy
+			enemies[0].TakeDamage(Damage + DamageBonus + DashHitDamageBonus);
 
 			//TODO: AVFX here.
 

@@ -84,7 +84,7 @@ internal abstract class Entity {
 	/// </summary>
 	public Texture2D CurrentTexture { get; set; }
 
-	public void Render() {
+	public virtual void Render(float _) {
 		Raylib.DrawTextureV(CurrentTexture, Position, Color.White);
 	}
 
