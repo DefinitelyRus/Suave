@@ -11,7 +11,6 @@ internal abstract class Character : PhysicalEntity {
 		string name,
 		string entityId,
 		Vector2 position,
-		Projectile projectile,
 		float hitRadius = 16,
 		int maxHealth = 10,
 		int damage = 1,
@@ -25,7 +24,6 @@ internal abstract class Character : PhysicalEntity {
 		position,
 		hitRadius
 	) {
-		Projectile = projectile;
 		Health = maxHealth;
 		Damage = damage;
 		AttackRange = attackRange;
@@ -54,16 +52,6 @@ internal abstract class Character : PhysicalEntity {
 	public float AttackRange { get; protected set; }
 	public float AttackCooldown { get; protected set; }
 	protected float AttackCooldownRemaining { get; set; } = 0f;
-	public Projectile Projectile { get; protected set; }
-
-	public void Attack(Character target) {
-		if (AttackCooldownRemaining > 0) return;
-
-		Vector2 directionToTarget = Vector2.Normalize(target.Position - Position);
-
-		Projectile.Launch(directionToTarget);
-		AttackCooldownRemaining = AttackCooldown;
-	}
 
 	public void TakeDamage(int amount) {
 		Health -= amount;
