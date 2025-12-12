@@ -35,30 +35,12 @@ internal abstract class Entity(string name, string entityId) {
 	#region Instance Handling
 
 	/// <summary>
-	/// Whether this entity has been added to the game world.
-	/// </summary>
-	public bool IsInstantiated { get; set; } = false;
-
-	/// <summary>
 	/// The unique instance identifier for this specific entity.
 	/// </summary>
 	/// <remarks>
 	/// This is assigned upon registration with the <see cref="EntityManager"/> during instantiation.
 	/// </remarks>
 	public string InstanceId { get; set; } = string.Empty;
-
-	/// <summary>
-	/// Creates a new instance of the entity in the game world.
-	/// </summary>
-	/// <remarks>
-	/// <see cref="Entity"/> objects are considered templates by default that must be instantiated.
-	/// Upon instantiation, the entity is registered with the <see cref="EntityManager"/> and assigned a unique <see cref="InstanceId"/>.
-	/// </remarks>
-	public virtual void Instantiate(Vector2 position) {
-		EntityManager.RegisterEntity(this);
-		IsInstantiated = true;
-		Position = position;
-	}
 
 	/// <summary>
 	/// Unregisters the entity from the <see cref="EntityManager"/>,
