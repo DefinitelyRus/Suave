@@ -24,16 +24,12 @@ internal abstract class Projectile : PhysicalEntity {
 	/// </summary>
 	public bool IsLaunched = false;
 
-	public Projectile(string name, string entityId, Vector2 position, Character owner, float hitRadius = 16f, float speed = 160f, float lifespan = 4f) : base(name, entityId, position, hitRadius) {
-		Name = name;
-		EntityId = entityId;
+	public Projectile(string name, string entityId, Character owner, float hitRadius = 16f, float speed = 160f, float lifespan = 4f) : base(name, entityId, Vector2.Zero, hitRadius) {
+		Position = owner.Position;
 		Owner = owner;
-		HitRadius = hitRadius;
 		Speed = speed;
 		Lifespan = lifespan;
 		LifespanRemaining = lifespan;
-
-		Position = owner.Position;
 	}
 
 	public override void Update(float delta) {
