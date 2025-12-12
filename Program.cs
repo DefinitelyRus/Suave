@@ -12,9 +12,10 @@ internal class Program {
         while (!Raylib.WindowShouldClose()) {
             Raylib.BeginDrawing();
 
-            float delta = Raylib.GetFrameTime();
-
-			EntityManager.UpdateAllEntities(delta);
+            if (!StateManager.IsPaused) {
+                float delta = Raylib.GetFrameTime();
+                EntityManager.UpdateAllEntities(delta);
+            }
 
 			Raylib.EndDrawing();
 		}
