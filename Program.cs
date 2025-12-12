@@ -17,6 +17,8 @@ internal class Program {
             if (!StateManager.IsPaused) {
                 float delta = Raylib.GetFrameTime();
                 EntityManager.UpdateAllEntities(delta);
+
+                EntityManager.ProcessEntityRegistration(delta);
             }
 
 			Raylib.EndDrawing();
