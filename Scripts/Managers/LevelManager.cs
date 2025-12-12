@@ -148,10 +148,8 @@ internal static class LevelManager {
 			Vector2 spawnPosition = (position == null) ? GetRandomSpawnPosition() : position.Value;
 
 			// Return if trying to spawn non-player before player.
-			bool isTypePlayer = characterType == typeof(Player);
-			bool hasRegisteredPlayer = EntityManager.Player != null;
-			if (!isTypePlayer && !hasRegisteredPlayer) {
-				Log.Warn(() => "The player character must be spawned before other characters.");
+			if (EntityManager.Player == null) {
+				Log.Warn(() => "The player character must be registered before other characters.");
 				return;
 			}
 
