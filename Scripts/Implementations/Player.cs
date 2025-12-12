@@ -7,6 +7,7 @@ namespace Suave.Scripts.Implementations;
 internal class Player(
 	string name,
 	string entityId,
+	Vector2 position,
 	Projectile projectile,
 	float hitRadius = 16,
 	int maxHealth = 10,
@@ -24,6 +25,7 @@ internal class Player(
 	Character(
 		name,
 		entityId,
+		position,
 		projectile,
 		hitRadius,
 		maxHealth,

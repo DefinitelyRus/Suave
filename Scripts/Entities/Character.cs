@@ -5,6 +5,7 @@ namespace Suave.Scripts.Entities;
 internal abstract class Character(
 	string name,
 	string entityId,
+	Vector2 position,
 	Projectile projectile,
 	float hitRadius = 16,
 	int maxHealth = 10,
@@ -15,6 +16,7 @@ internal abstract class Character(
 	PhysicalEntity(
 		name,
 		entityId,
+		position,
 		hitRadius
 	) {
 
