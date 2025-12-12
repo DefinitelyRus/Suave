@@ -5,6 +5,7 @@ namespace Suave.Scripts.Entities;
 internal abstract class Enemy(
 	string name,
 	string entityId,
+	Vector2 position,
 	Projectile projectile,
 	float hitRadius = 16,
 	int maxHealth = 10,
@@ -13,16 +14,16 @@ internal abstract class Enemy(
 	float attackCooldown = 1f,
 	float aggroRange = 200f,
 	float avoidRange = 50f
-	) :
-	Character(
-		name,
-		entityId,
-		projectile,
-		hitRadius,
-		maxHealth,
-		damage,
-		attackRange,
-		attackCooldown
+	) : Character(
+	name,
+	entityId,
+	position,
+	projectile,
+	hitRadius,
+	maxHealth,
+	damage,
+	attackRange,
+	attackCooldown
 	) {
 
 	#region General
