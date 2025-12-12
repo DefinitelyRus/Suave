@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Suave.Scripts.Implementations;
 using Suave.Scripts.Managers;
 namespace Suave.Scripts.Entities;
 
@@ -6,7 +7,6 @@ internal abstract class Enemy(
 	string name,
 	string entityId,
 	Vector2 position,
-	Projectile projectile,
 	float hitRadius = 16,
 	int maxHealth = 10,
 	int damage = 1,
@@ -19,7 +19,6 @@ internal abstract class Enemy(
 	name,
 	entityId,
 	position,
-	projectile,
 	hitRadius,
 	maxHealth,
 	damage,
@@ -29,6 +28,16 @@ internal abstract class Enemy(
 	) {
 
 	#region General
+
+	public void Attack(Character target) {
+		if (AttackCooldownRemaining > 0) return;
+
+		Bullet bullet = new(this);
+		Vector2 directionToTarget = Vector2.Normalize(target.Position - Position);
+		bullet.Launch(directionToTarget);
+
+		AttackCooldownRemaining = AttackCooldown;
+	}
 
 	public override void Update(float delta) {
 		base.Update(delta);

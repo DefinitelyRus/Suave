@@ -3,7 +3,7 @@ using Suave.Scripts.Managers;
 
 namespace Suave.Scripts.Entities;
 
-internal abstract class Projectile : PhysicalEntity {
+internal class Projectile : PhysicalEntity {
 
 	#region General
 
@@ -24,7 +24,7 @@ internal abstract class Projectile : PhysicalEntity {
 	/// </summary>
 	public bool IsLaunched = false;
 
-	public Projectile(string name, string entityId, Character owner, float hitRadius = 16f, float speed = 160f, float lifespan = 4f) : base(name, entityId, Vector2.Zero, hitRadius) {
+	public Projectile(string name, string entityId, Character owner, float hitRadius = 4f, float speed = 640f, float lifespan = 4f) : base(name, entityId, Vector2.Zero, hitRadius) {
 		Position = owner.Position;
 		Owner = owner;
 		Speed = speed;
@@ -78,14 +78,12 @@ internal abstract class Projectile : PhysicalEntity {
 
 	protected float RenderMaxDistance = 2000f;
 
-	public void Launch(Vector2 direction) {
+	public virtual void Launch(Vector2 direction) {
 		Direction = Vector2.Normalize(direction);
 		IsLaunched = true;
-
-		//TODO: AVFX here.
 	}
 
-	public void Launch(PhysicalEntity target) {
+	public virtual void Launch(PhysicalEntity target) {
 		Vector2 targetPosition = target.Position;
 		Vector2 directionToTarget = Vector2.Normalize(targetPosition - Position);
 		Launch(directionToTarget);

@@ -1,29 +1,41 @@
-﻿using System.Numerics;
+using System.Numerics;
+using Raylib_cs;
 using Suave.Scripts.Managers;
 using Suave.Scripts.Tools;
 
 namespace Suave.Scripts.Entities;
 
-internal abstract class Character(
-	string name,
-	string entityId,
-	Vector2 position,
-	Projectile projectile,
-	float hitRadius = 16,
-	int maxHealth = 10,
-	int damage = 1,
-	float attackRange = 64,
-	float attackCooldown = 1f,
-	float moveSpeed = 100f
+internal abstract class Character : PhysicalEntity {
+
+	#region General
+
+	public Character(
+		string name,
+		string entityId,
+		Vector2 position,
+		float hitRadius = 16,
+		int maxHealth = 10,
+		int damage = 1,
+		float attackRange = 64,
+		float attackCooldown = 1f,
+		float moveSpeed = 100f
 	) :
-	PhysicalEntity(
+	base (
 		name,
 		entityId,
 		position,
 		hitRadius
 	) {
+		Health = maxHealth;
+		Damage = damage;
+		AttackRange = attackRange;
+		AttackCooldown = attackCooldown;
+		MoveSpeed = moveSpeed;
 
-	#region General
+		float x = Raylib.GetRandomValue(0, 1);
+		float y = Raylib.GetRandomValue(0, 1);
+		FaceDirection = Vector2.Normalize(new Vector2(x, y));
+	}
 
 	public override void Update(float delta) {
 		if (AttackCooldownRemaining > 0) {
@@ -50,33 +62,21 @@ internal abstract class Character(
 
 	#region Combat
 
-	public int Health { get; protected set; } = maxHealth;
-	public int MaxHealth { get; protected set; } = maxHealth;
-	public int Damage { get; protected set; } = damage;
-	public float AttackRange { get; protected set; } = attackRange;
-	public float AttackCooldown { get; protected set; } = attackCooldown;
+	public int Health { get; protected set; }
+	public int MaxHealth { get; protected set; }
+	public int Damage { get; protected set; }
+	public float AttackRange { get; protected set; }
+	public float AttackCooldown { get; protected set; }
 	protected float AttackCooldownRemaining { get; set; } = 0f;
-	public Projectile Projectile { get; protected set; } = projectile;
-
-	public void Attack(Character target) {
-		if (AttackCooldownRemaining > 0) return;
-
-		Vector2 directionToTarget = Vector2.Normalize(target.Position - Position);
-
-		Projectile.Launch(directionToTarget);
-		AttackCooldownRemaining = AttackCooldown;
-	}
 
 	public void TakeDamage(int amount) {
 		Health -= amount;
 
 		if (Health < 0) {
 			Health = 0;
-			Kill();
+			Despawn();
 		}
 	}
-
-	public abstract void Kill();
 
 	#endregion
 
@@ -84,7 +84,7 @@ internal abstract class Character(
 
 	public Vector2 FaceDirection { get; protected set; } = new Vector2(0, -1);
 	public Vector2 MoveDirection { get; protected set; } = Vector2.Zero;
-	public float MoveSpeed { get; protected set; } = moveSpeed;
+	public float MoveSpeed { get; protected set; }
 
 	/// <summary>
 	/// Face towards the target position.

@@ -7,7 +7,6 @@ internal class Player(
 	string name,
 	string entityId,
 	Vector2 position,
-	Projectile projectile,
 	float hitRadius = 16,
 	int maxHealth = 10,
 	int damage = 1,
@@ -26,7 +25,6 @@ internal class Player(
 		name,
 		entityId,
 		position,
-		projectile,
 		hitRadius,
 		maxHealth,
 		damage,
@@ -85,16 +83,8 @@ internal class Player(
 			Character self = this;
 			self.TakeDamage(projectile.Owner.Damage);
 
-			Kill();
+			Despawn();
 		}
-	}
-
-	public override void Kill() {
-		//TODO: AVFX here.
-
-		//TODO: Game Over logic here.
-
-		Despawn();
 	}
 
 	#endregion
@@ -108,7 +98,7 @@ internal class Player(
 	/// <summary>
 	/// For the Player character, attacks are always parries.
 	/// </summary>
-	public void Attack() {
+	public void Parry() {
 		if (AttackCooldownRemaining > 0) return;
 
 		// Check if there is an enemy within `ParryRange` in the `FaceDirection`.
