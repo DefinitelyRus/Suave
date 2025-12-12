@@ -59,6 +59,31 @@ internal class Player(
 
 	private float DamageCooldownRemaining { get; set; } = 0.0f;
 
+	public void CheckNearMiss() {
+		// Dodges only trigger if Player can also take damage.
+		if (DamageCooldownRemaining > 0) return;
+
+		Projectile[] projectiles = [.. EntityManager
+			.GetAllEntitiesInRadius<Projectile>(Position, HitRadius + NearMissRange)
+			.Where(e => Vector2.Dot(Vector2.Normalize(e.Position - Position), FaceDirection) > 0.5f)
+			.OrderBy(p => Vector2.Distance(Position, p.Position))
+		];
+
+		if (projectiles.Length == 0) return;
+
+		Projectile projectile = projectiles[0];
+		float distanceToProjectile = Vector2.Distance(Position, projectile.Position);
+
+
+		// Failed to dodge.
+		if (distanceToProjectile <= HitRadius) {
+			//Character self = this;
+			//self.TakeDamage(projectile.Owner.Damage);
+
+			Kill();
+		}
+	}
+
 	public override void Kill() {
 		//TODO: AVFX here.
 
@@ -73,6 +98,36 @@ internal class Player(
 
 	public float ParryTolerance { get; protected set; } = parryTolerance;
 
+	/// <summary>
+	/// For the Player character, attacks are always parries.
+	/// </summary>
+	public void Attack() {
+		if (AttackCooldownRemaining > 0) return;
+
+		// Check if there is an enemy within `ParryRange` in the `FaceDirection`.
+		Projectile[] projectiles = [.. EntityManager
+			.GetAllEntitiesInRadius<Projectile>(Position, ParryRange)
+			.Where(e => Vector2.Dot(Vector2.Normalize(e.Position - Position), FaceDirection) > ParryTolerance)
+			.OrderBy(p => Vector2.Distance(Position, p.Position))
+		];
+
+		// No projectiles to parry.
+		if (projectiles.Length == 0) {
+			AttackCooldownRemaining = AttackCooldown;
+			return;
+		}
+
+		Projectile projectile = projectiles[0];
+
+		// Parry the projectile: Heal self for half damage, deal half damage to owner.
+		int effectOnTarget = (int) Math.Round(projectile.Owner.Damage / 2f);
+		Health = Math.Min(Health + effectOnTarget, MaxHealth);
+		projectile.Owner.TakeDamage(effectOnTarget);
+
+		//TODO: AVFX here.
+
+		AttackCooldownRemaining = AttackCooldown;
+	}
 
 	#endregion
 
@@ -87,6 +142,38 @@ internal class Player(
 	private float DashCooldownRemaining { get; set; } = 0.0f;
 
 	public float DashHitTolerance { get; protected set; } = dashHitTolerance;
+
+	public void Dash() {
+		if (DashCooldownRemaining > 0) return;
+
+		//Check if there are any enemies in the dash direction within a certain range.
+		Enemy[] enemies = [.. EntityManager
+			.GetAllEntitiesInRadius<Character>(Position, DashDistance)
+			.OfType<Enemy>()
+			.Where(e => Vector2.Dot(Vector2.Normalize(e.Position - Position), FaceDirection) > DashHitTolerance)
+			.OrderBy(e => Vector2.Distance(Position, e.Position))
+		];
+
+		//TODO: AVFX here.
+
+		// Dash normally, apply cooldown.
+		if (enemies.Length == 0) {
+			Position += FaceDirection * DashDistance;
+			DashCooldownRemaining = DashMissCooldown;
+
+			return;
+		}
+
+		// Dash to the closest enemy
+		else {
+			Position = enemies[0].Position;
+			DashCooldownRemaining = DashHitCooldown;
+
+			//TODO: AVFX here.
+
+			return;
+		}
+	}
 
 	#endregion
 }
