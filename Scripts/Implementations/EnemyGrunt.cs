@@ -10,12 +10,12 @@ internal class EnemyGrunt : Enemy {
 		entityId: "EnemyGrunt",
 		position: position,
 		hitRadius: 32f,
-		maxHealth: 20,
+		maxHealth: 12,
 		damage: 1,
 		attackRange: 128f,
 		attackCooldown: 1f,
 		moveSpeed: 64f,
-		aggroRange: 156f,
+		aggroRange: 192f,
 		avoidRange: 48f
 		)
 	{
