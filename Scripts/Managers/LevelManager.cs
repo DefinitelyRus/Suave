@@ -224,7 +224,6 @@ internal static class LevelManager {
 				return null;
 		}
 
-		EntityManager.RegisterEntity(character);
 		return character;
 	}
 
