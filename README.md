@@ -1,6 +1,9 @@
 # Suave
 A 2D top-down game where you dodge projectiles, gain adrenaline, and defeat your enemy in one fell swoop.
 
+> ⚠️ This project is a **work in progress** -- it is not yet at a playable state. ⚠️
+
+
 ## Game Mechanics
 ### The player can
 - Move in any direction with WASD
