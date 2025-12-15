@@ -19,10 +19,20 @@ internal abstract class Entity {
 	/// </summary>
 	public string EntityId { get; protected set; }
 
+	private Vector2 _position;
+
 	/// <summary>
 	/// The current position of the entity in the game world.
 	/// </summary>
-	public Vector2 Position { get; set; } = Vector2.Zero;
+	public Vector2 Position {
+		get {
+			return _position;
+		}
+		set {
+			Log.Me(() => $"Set position to {value} for {EntityId}.");
+			_position = value;
+		}
+	}
 
 	public Entity(string name, string entityId, Vector2 position) {
 		Name = name;
