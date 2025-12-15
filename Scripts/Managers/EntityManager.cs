@@ -16,9 +16,9 @@ internal static class EntityManager {
 
 	public static Player? Player = null;
 
-	private static List<Entity> RegisterQueue = [];
+	private static readonly Queue<Entity> RegisterQueue = [];
 
-	private static List<Entity> UnregisteredEntities = [];
+	private static readonly Queue<Entity> UnregisteredEntities = [];
 
 	/// <summary>
 	/// Registers an entity and spawns it in the game world.
@@ -35,7 +35,7 @@ internal static class EntityManager {
 			return;
 		}
 
-		RegisterQueue.Add(entity);
+		RegisterQueue.Enqueue(entity);
 	}
 
 	/// <summary>
@@ -58,7 +58,7 @@ internal static class EntityManager {
 			return;
 		}
 
-		UnregisteredEntities.Add(entity);
+		UnregisteredEntities.Enqueue(entity);
 	}
 
 	public static void ProcessEntityRegistration(float _) {
@@ -67,7 +67,8 @@ internal static class EntityManager {
 
 		List<Entity> doneRegistration = [];
 
-		foreach (Entity entity in RegisterQueue) {
+		while (RegisterQueue.Count > 0) {
+			Entity entity = RegisterQueue.Dequeue();
 			Log.Me(() => $"Registering {entity.EntityId}...");
 
 			AssignInstanceId(entity);
@@ -109,19 +110,17 @@ internal static class EntityManager {
 					Log.Err(() => $"Entity '{entity.InstanceId}' of type '{entity.GetType().Name}' is already categorized specifically.");
 					break;
 			}
-			Entities.Add(entity);
-			doneRegistration.Add(entity);
-		}
 
-		foreach (Entity entity in doneRegistration) RegisterQueue.Remove(entity);
+			Entities.Add(entity);
+		}
 
 		#endregion
 
 		#region Unregistration
 
-		List<Entity> doneUnregistration = [];
+		while (UnregisteredEntities.Count > 0) {
+			Entity entity = UnregisteredEntities.Dequeue();
 
-		foreach (Entity entity in UnregisteredEntities) {
 			Log.Me(() => $"Unregistering {entity.InstanceId}...");
 
 			switch (entity) {
@@ -161,9 +160,8 @@ internal static class EntityManager {
 			Entities.Remove(entity);
 		}
 
-		foreach (Entity entity in doneUnregistration) UnregisteredEntities.Remove(entity);
-
 		#endregion
+
 	}
 
 	/// <summary>
