@@ -184,7 +184,7 @@ internal static class EntityManager {
 		Particles.Clear();
 	}
 
-	public static void UpdateAllEntities(float deltaTime) {
+	public static void Update(float deltaTime) {
 		foreach (Entity entity in Entities) {
 			entity.Update(deltaTime);
 		}
