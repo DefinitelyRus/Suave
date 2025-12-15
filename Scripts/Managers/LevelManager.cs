@@ -71,7 +71,7 @@ internal static class LevelManager {
 			)
 		];
 
-
+		StartLevel(0);
 	}
 
 	public static void Update(float delta) {
@@ -152,7 +152,7 @@ internal static class LevelManager {
 
 	private static readonly Vector2 SpawnAreaStart = new(128, 72);
 	private static readonly Vector2 SpawnAreaEnd = new(1152, 648);
-	private static readonly Vector2 PlayerSpawnPosition = new(640, 360);
+	private static readonly Vector2 PlayerSpawnPosition = new(GameRenderer.CenterX, GameRenderer.CenterY);
 
 	public static Vector2 GetRandomSpawnPosition() {
 		float x = Raylib.GetRandomValue((int) SpawnAreaStart.X, (int) SpawnAreaEnd.X);
