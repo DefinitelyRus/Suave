@@ -188,6 +188,15 @@ internal static class EntityManager {
 		}
 	}
 
+	/// <summary>
+	/// Checks for a physical entity at the specified position.
+	/// </summary>
+	/// <remarks>
+	/// In cases where there are multiple entities found at the specific position,
+	/// the first matching entity from <see cref="Entities"/> will be returned.
+	/// </remarks>
+	/// <param name="position">The point where to search for an entity.</param>
+	/// <returns></returns>
 	public static PhysicalEntity? GetEntityAtPosition(Vector2 position) {
 		foreach (Entity entity in Entities) {
 			if (entity is not PhysicalEntity physicalEntity) continue;
@@ -199,6 +208,13 @@ internal static class EntityManager {
 		return null;
 	}
 
+	/// <summary>
+	/// Checks for all entities of type T within a specified radius from a given position.
+	/// </summary>
+	/// <typeparam name="T">The type of <see cref="PhysicalEntity"/> to search for.</typeparam>
+	/// <param name="position">The center position of the search radius.</param>
+	/// <param name="radius">How far to search.</param>
+	/// <returns>The instances of type T found within the given radius of the given position.</returns>
 	public static T[] GetAllEntitiesInRadius<T>(Vector2 position, float radius) where T : PhysicalEntity {
 
 		List<T> foundEntities = [];
@@ -237,6 +253,12 @@ internal static class EntityManager {
 		}
 	}
 
+	/// <summary>
+	/// Checks for all physical entities within a specified radius from a given position.
+	/// </summary>
+	/// <param name="position">The center position of the search radius.</param>
+	/// <param name="radius">How far to search.</param>
+	/// <returns>The <see cref="PhysicalEntity"/> instances found within the given radius of the given position.</returns>
 	public static PhysicalEntity[] GetAllEntitiesInRadius(Vector2 position, float radius) {
 		List<PhysicalEntity> foundEntities = [];
 		foreach (Entity entity in Entities) {
@@ -259,7 +281,7 @@ internal static class EntityManager {
 	private static void AssignInstanceId(Entity entity) {
 		GenerateId:
 		int randomNumber = Raylib.GetRandomValue(0, 99999);
-		string instanceId = $"{entity.EntityId} #{randomNumber:D5}";
+		string instanceId = $"{entity.EntityId}#{randomNumber:D5}";
 
 		foreach (Entity other in Entities) {
 			if (other == entity) continue;
