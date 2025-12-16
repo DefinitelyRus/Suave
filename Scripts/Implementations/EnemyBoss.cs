@@ -9,18 +9,26 @@ internal class EnemyBoss : Enemy {
 		name: "Boss",
 		entityId: "EnemyBoss",
 		position: position,
-		hitRadius: 32f,
-		maxHealth: 150,
+		hitRadius: 50f,
+		maxHealth: 50,
 		damage: 2,
-		attackRange: 256f,
-		attackCooldown: 0.8f,
-		moveSpeed: 96f,
-		aggroRange: 392f,
-		avoidRange: 48f
+		attackRange: 650f,
+		attackCooldown: 0.25f,
+		moveSpeed: 64f,
+		aggroRange: 1500f,
+		avoidRange: 50f
 		) {
 		Name = "Boss";
 		EntityId = "EnemyBoss";
 		Position = position;
-		CurrentTexture = ResourceManager.GetTexture("Enemy Boss");
+		CurrentTexture = ResourceManager.GetTexture("EnemyBoss");
+	}
+
+	public override void Attack(Character target) {
+		// TODO: AVFX here.
+		if (AttackCooldownRemaining > 0) return;
+		SoundPlayer.Play("Boss - Attack");
+
+		base.Attack(target);
 	}
 }

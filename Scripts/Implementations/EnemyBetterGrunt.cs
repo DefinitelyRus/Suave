@@ -8,18 +8,26 @@ internal class EnemyBetterGrunt : Enemy {
 		name: "Senior Grunt",
 		entityId: "EnemyGrunt",
 		position: position,
-		hitRadius: 32f,
-		maxHealth: 24,
-		damage: 2,
-		attackRange: 128f,
-		attackCooldown: 1f,
-		moveSpeed: 64f,
-		aggroRange: 192f,
-		avoidRange: 48f
+		hitRadius: 50f,
+		maxHealth: 15,
+		damage: 1,
+		attackRange: 360f,
+		attackCooldown: 0.8f,
+		moveSpeed: 96f,
+		aggroRange: 400f,
+		avoidRange: 50f
 		) {
 		Name = "Senior Grunt";
 		EntityId = "EnemyBetterGrunt";
 		Position = position;
 		CurrentTexture = ResourceManager.GetTexture("Enemy Better Grunt");
+	}
+
+	public override void Attack(Character target) {
+		// TODO: AVFX here.
+		if (AttackCooldownRemaining > 0) return;
+		SoundPlayer.Play("Better Grunt - Attack");
+
+		base.Attack(target);
 	}
 }

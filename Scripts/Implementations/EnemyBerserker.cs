@@ -9,18 +9,26 @@ internal class EnemyBerserker : Enemy {
 		name: "Berserker",
 		entityId: "EnemyBerserker",
 		position: position,
-		hitRadius: 32f,
-		maxHealth: 20,
+		hitRadius: 50f,
+		maxHealth: 12,
 		damage: 1,
-		attackRange: 72f,
-		attackCooldown: 1f,
-		moveSpeed: 24f,
-		aggroRange: 108f,
-		avoidRange: 48f
+		attackRange: 450f,
+		attackCooldown: 0.25f,
+		moveSpeed: 80f,
+		aggroRange: 500f,
+		avoidRange: 150f
 		) {
 		Name = "Berserker";
 		EntityId = "EnemyBerserker";
 		Position = position;
-		CurrentTexture = ResourceManager.GetTexture("Enemy Berserker");
+		CurrentTexture = ResourceManager.GetTexture("EnemyBerserker");
+	}
+
+	public override void Attack(Character target) {
+		// TODO: AVFX here.
+		if (AttackCooldownRemaining > 0) return;
+		SoundPlayer.Play("Berserker - Attack");
+
+		base.Attack(target);
 	}
 }

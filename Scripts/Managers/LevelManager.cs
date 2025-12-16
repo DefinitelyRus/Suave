@@ -17,9 +17,9 @@ internal static class LevelManager {
 			// Level 1
 			new Level(
 				timeLimit: 120f,
-				waveCount: 3,
+				waveCount: 2,
 				enemiesToSpawn: [
-					new PackedEnemy(typeof(EnemyGrunt), 3)
+					new PackedEnemy(typeof(EnemyGrunt), 4)
 				],
 				"Level 1"
 			),
@@ -27,10 +27,10 @@ internal static class LevelManager {
 			// Level 2
 			new Level(
 				timeLimit: 180f,
-				waveCount: 3,
+				waveCount: 2,
 				enemiesToSpawn: [
-					new PackedEnemy(typeof(EnemyGrunt), 3),
-					new PackedEnemy(typeof(EnemyBetterGrunt), 3)
+					new PackedEnemy(typeof(EnemyGrunt), 2),
+					new PackedEnemy(typeof(EnemyBetterGrunt), 2)
 				],
 				"Level 2"
 			),
@@ -38,7 +38,7 @@ internal static class LevelManager {
 			// Level 3
 			new Level(
 				timeLimit: 180f,
-				waveCount: 4,
+				waveCount: 3,
 				enemiesToSpawn: [
 					new PackedEnemy(typeof(EnemyBerserker), 2),
 					new PackedEnemy(typeof(EnemySniper), 2)
@@ -62,10 +62,10 @@ internal static class LevelManager {
 			// Level 5
 			new Level(
 				timeLimit: 180f,
-				waveCount: 3,
+				waveCount: 1,
 				enemiesToSpawn: [
-					new PackedEnemy(typeof(EnemyGrunt), 3),
-					new PackedEnemy(typeof(EnemyBetterGrunt), 3)
+					new PackedEnemy(typeof(EnemyBoss), 2),
+					new PackedEnemy(typeof(EnemyBetterGrunt), 8)
 				],
 				"Level 5"
 			)
@@ -74,6 +74,7 @@ internal static class LevelManager {
 
 	public static void Update(float delta) {
 		UpdateTimer(delta);
+		ScanWave(delta);
 	}
 
 	#endregion
@@ -85,13 +86,17 @@ internal static class LevelManager {
 	public static Level[] Levels = [];
 	public static Level? CurrentLevel = null;
 
-	public static void StartLevel(uint levelIndex) {
+	public static void StartLevel(int levelIndex = -1) {
+		// Use current level index if none specified.
+		if (levelIndex < 0) levelIndex = (int) ++CurrentLevelIndex;
+
 		if (levelIndex >= Levels.Length) {
-			Log.Err(() => $"Cannot start level at index '{levelIndex}': Index out of bounds.");
+			Log.Me(() => "All levels complete! Restarting from Level 1.");
+			StateManager.CurrentState = StateManager.States.Win;
 			return;
 		}
 
-		CurrentLevelIndex = levelIndex;
+		CurrentLevelIndex = (uint) levelIndex;
 		CurrentLevel = Levels[CurrentLevelIndex];
 		LevelTimer = CurrentLevel.TimeLimit;
 
@@ -107,30 +112,41 @@ internal static class LevelManager {
 
 	#region Wave Management
 
-	private static uint CurrentWave = 1;
+	private static uint CurrentWave { get; set; } = 1;
 
-	public static void StartWave() {
-		Task.Run(() => SpawnEnemies(CurrentLevel!));
+	private static bool DoneSpawningWave { get; set; } = false;
+
+	public static async void StartWave() {
+		DoneSpawningWave = false;
+		CurrentWave++;
+		Log.Me(() => $"Wave {CurrentWave} starting!");
+		await Task.Run(() => SpawnEnemies(CurrentLevel!));
+		DoneSpawningWave = true;
 	}
 
 	public static void ScanWave(float _) {
+		if (!DoneSpawningWave) return;
+
+		// Check for remaining enemies.
 		Enemy[] remainingEnemies = [.. EntityManager
 			.Characters
 			.Where(c => c is Enemy)
 			.Cast<Enemy>()
 		];
 
+		Log.Me(() => $"Remaining Enemies: {remainingEnemies.Length}");
+
+		// If enemies remain, do nothing.
 		if (remainingEnemies.Length != 0) return;
 
-		CurrentWave++;
-
-		if (CurrentWave > CurrentLevel!.Waves) {
-			Log.Me(() => "Level complete!");
-			StartLevel(CurrentLevelIndex + 1);
+		// If no enemies remain, move to next wave or level.
+		if (CurrentWave <= CurrentLevel!.Waves) {
+			StartWave();
 			return;
 		}
 
-		Log.Me(() => $"Wave {CurrentWave} starting!");
+		Log.Me(() => "Level complete!");
+		StartLevel();
 	}
 
 	#endregion
