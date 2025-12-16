@@ -85,13 +85,17 @@ internal static class LevelManager {
 	public static Level[] Levels = [];
 	public static Level? CurrentLevel = null;
 
-	public static void StartLevel(uint levelIndex) {
+	public static void StartLevel(int levelIndex = -1) {
+		// Use current level index if none specified.
+		if (levelIndex < 0) levelIndex = (int) ++CurrentLevelIndex;
+
 		if (levelIndex >= Levels.Length) {
-			Log.Err(() => $"Cannot start level at index '{levelIndex}': Index out of bounds.");
+			Log.Me(() => "All levels complete! Restarting from Level 1.");
+			StateManager.CurrentState = StateManager.States.Win;
 			return;
 		}
 
-		CurrentLevelIndex = levelIndex;
+		CurrentLevelIndex = (uint) levelIndex;
 		CurrentLevel = Levels[CurrentLevelIndex];
 		LevelTimer = CurrentLevel.TimeLimit;
 
