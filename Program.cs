@@ -6,8 +6,8 @@ namespace Suave;
 internal class Program {
     static void Main() {
         Raylib.SetTraceLogLevel(TraceLogLevel.Warning);
-        GameRenderer.Init();
-        SoundPlayer.Init();
+		SoundPlayer.Init();
+		GameRenderer.Init();
         GameManager.Init();
         LevelManager.Init();
         
