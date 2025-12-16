@@ -74,6 +74,7 @@ internal static class LevelManager {
 
 	public static void Update(float delta) {
 		UpdateTimer(delta);
+		ScanWave(delta);
 	}
 
 	#endregion
