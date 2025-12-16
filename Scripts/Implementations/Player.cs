@@ -85,6 +85,12 @@ internal class Player(
 
 			return;
 		}
+
+		// Successful dodge.
+		DamageBonus += 1;
+		DamageCooldownRemaining = DamageCooldown;
+
+		//TODO: AVFX here.
 	}
 
 	#endregion
