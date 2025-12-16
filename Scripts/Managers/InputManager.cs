@@ -16,28 +16,65 @@ internal class InputManager {
 	public const KeyboardKey Right = KeyboardKey.D;
 
 	public static void Update(float delta) {
-		if (Raylib.IsKeyPressed(Pause)) StateManager.TogglePause();
+		switch (StateManager.CurrentState) {
 
-		if (Raylib.IsKeyPressed(Reset)) ;// RESET GAME
+			// ----- In-game -----
+			case StateManager.States.Playing:
 
-		if (StateManager.IsPaused) return;
+				if (EntityManager.Player == null) return;
 
-		Vector2 mousePosition = Raylib.GetMousePosition();
+				Vector2 mousePosition = Raylib.GetMousePosition();
 
-		if (EntityManager.Player != null) {
-			EntityManager.Player.FaceTowards(mousePosition, delta);
+				// Actions
+				if (Raylib.IsMouseButtonPressed(Parry)) EntityManager.Player.Parry();
+				if (Raylib.IsMouseButtonPressed(Dash)) EntityManager.Player.Dash();
 
-			if (Raylib.IsMouseButtonPressed(Parry)) EntityManager.Player!.Parry();
+				// Movement
+				EntityManager.Player.FaceTowards(mousePosition, delta);
+				if (Raylib.IsKeyDown(Up)) EntityManager.Player.MoveTowardsDirection(new Vector2(0, -1), delta);
+				if (Raylib.IsKeyDown(Down)) EntityManager.Player.MoveTowardsDirection(new Vector2(0, 1), delta);
+				if (Raylib.IsKeyDown(Left)) EntityManager.Player.MoveTowardsDirection(new Vector2(-1, 0), delta);
+				if (Raylib.IsKeyDown(Right)) EntityManager.Player.MoveTowardsDirection(new Vector2(1, 0), delta);
 
-			if (Raylib.IsMouseButtonPressed(Dash)) EntityManager.Player!.Dash();
+				// Options
+				if (Raylib.IsKeyPressed(Pause)) StateManager.TogglePause();
+				if (Raylib.IsKeyPressed(Reset)) GameManager.Reset();
+				break;
 
-			if (Raylib.IsKeyDown(Up)) EntityManager.Player!.MoveTowardsDirection(new Vector2(0, -1), delta);
+			// ----- Main menu -----
+			case StateManager.States.Menu:
 
-			if (Raylib.IsKeyDown(Down)) EntityManager.Player!.MoveTowardsDirection(new Vector2(0, 1), delta);
+				// Start the game
+				if (Raylib.IsKeyPressed(Start)) {
+					StateManager.CurrentState = StateManager.States.Playing;
+					LevelManager.StartLevel(0);
+				}
 
-			if (Raylib.IsKeyDown(Left)) EntityManager.Player!.MoveTowardsDirection(new Vector2(-1, 0), delta);
+				break;
 
-			if (Raylib.IsKeyDown(Right)) EntityManager.Player!.MoveTowardsDirection(new Vector2(1, 0), delta);
+			// ----- Paused -----
+			case StateManager.States.Paused:
+				if (Raylib.IsKeyPressed(Pause)) StateManager.TogglePause();
+				if (Raylib.IsKeyPressed(Reset)) GameManager.Reset();
+				break;
+
+			// ----- Won -----
+			case StateManager.States.Win:
+				if (Raylib.IsKeyPressed(Start)) {
+					StateManager.CurrentState = StateManager.States.Menu;
+					GameManager.Reset();
+				}
+
+				break;
+
+			// ----- Lost -----
+			case StateManager.States.Lose:
+				if (Raylib.IsKeyPressed(Start)) {
+					StateManager.CurrentState = StateManager.States.Menu;
+					GameManager.Reset();
+				}
+
+				break;
 		}
 	}
 }
