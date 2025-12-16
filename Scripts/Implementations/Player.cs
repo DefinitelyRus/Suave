@@ -204,6 +204,7 @@ internal class Player(
 
 			// Damage Enemy
 			enemies[0].TakeDamage(Damage + DamageBonus + DashHitDamageBonus);
+			DamageBonus = 0;
 
 			//TODO: AVFX here.
 
