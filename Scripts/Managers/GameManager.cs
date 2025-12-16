@@ -26,5 +26,6 @@ internal static class GameManager {
 		);
 
 		EntityManager.Player = player;
+		StateManager.CurrentState = StateManager.States.Menu;
 	}
 }
