@@ -7,6 +7,7 @@ internal class SoundPlayer {
 
 	public static void Init() {
 		Raylib.InitAudioDevice();
+		Raylib.SetMasterVolume(0.3f);
 	}
 	public static void Play(Sound sound) {
 		Raylib.PlaySound(sound);
