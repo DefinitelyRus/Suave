@@ -103,8 +103,7 @@ internal abstract class Entity {
 	/// </summary>
 	/// <param name="centeredPosition">The center point of the entity.</param>
 	public void SetCenteredPosition(Vector2 centeredPosition) {
-		Vector2 textureSize = new(CurrentTexture.Width, CurrentTexture.Height);
-		Position = centeredPosition - (textureSize / 2);
+		Position = centeredPosition;
 	}
 
 	#endregion
