@@ -1,25 +1,26 @@
 ﻿using System.Numerics;
 using Suave.Scripts.Entities;
 using Suave.Scripts.Managers;
+using Suave.Scripts.Tools;
 namespace Suave.Scripts.Implementations;
 
 internal class Player(
 	string name,
 	string entityId,
 	Vector2 position,
-	float hitRadius = 16,
-	int maxHealth = 10,
-	int damage = 1,
-	float attackRange = 64,
-	float attackCooldown = 1f,
-	float moveSpeed = 100f,
-	float nearMissRange = 48.0f,
-	float damageCooldown = 0.5f,
-	float parryTolerance = 0.8f,
-	float dashDistance = 150.0f,
-	float dashHitCooldown = 0.5f,
-	float dashMissCooldown = 2.0f,
-	float dashHitTolerance = 0.9f
+	float hitRadius,
+	int maxHealth,
+	int damage,
+	float attackRange,
+	float attackCooldown,
+	float moveSpeed,
+	float nearMissRange,
+	float damageCooldown,
+	float parryTolerance,
+	float dashDistance,
+	float dashHitCooldown,
+	float dashMissCooldown,
+	float dashHitTolerance
 	) :
 	Character(
 		name,
@@ -40,6 +41,8 @@ internal class Player(
 			DashCooldownRemaining -= delta;
 			if (DashCooldownRemaining < 0) DashCooldownRemaining = 0;
 		}
+
+		CheckNearMiss(delta);
 
 		base.Update(delta);
 	}
@@ -62,9 +65,21 @@ internal class Player(
 
 	private float DamageCooldownRemaining { get; set; } = 0.0f;
 
-	public void CheckNearMiss() {
+	private const float DodgeCooldown = 0.2f;
+
+	private float DodgeCooldownRemaining { get; set; } = 0.0f;
+
+	public void CheckNearMiss(float delta) {
 		// Dodges only trigger if Player can also take damage.
-		if (DamageCooldownRemaining > 0) return;
+		if (DamageCooldownRemaining <= 0) return;
+
+		// Handle Dodge Cooldown
+		if (DodgeCooldownRemaining > 0) {
+			DodgeCooldownRemaining -= delta;
+			if (DodgeCooldownRemaining < 0) DodgeCooldownRemaining = 0;
+
+			return;
+		}
 
 		Projectile[] projectiles = [.. EntityManager
 			.GetAllEntitiesInRadius<Projectile>(Position, HitRadius + NearMissRange)
@@ -77,14 +92,25 @@ internal class Player(
 		Projectile projectile = projectiles[0];
 		float distanceToProjectile = Vector2.Distance(Position, projectile.Position);
 
-
 		// Failed to dodge.
 		if (distanceToProjectile <= HitRadius) {
+			Log.Me(() => $"Dodge failed! Projectile at distance {distanceToProjectile}.");
+
 			Character self = this;
 			self.TakeDamage(projectile.Owner.Damage);
 
-			Despawn();
+			return;
 		}
+
+		Log.Me(() => $"Near miss detected! Projectile at distance {distanceToProjectile}.");
+
+		// Successful dodge.
+		DamageBonus += 1;
+		DamageCooldownRemaining = DamageCooldown;
+		DodgeCooldownRemaining = DodgeCooldown;
+
+		//TODO: AVFX here.
+		SoundPlayer.Play("Player - Near Miss");
 	}
 
 	#endregion
@@ -93,10 +119,10 @@ internal class Player(
 
 	public float ParryRange => AttackRange;
 
-	public float ParryTolerance { get; protected set; } = parryTolerance;
+	public float ParryTolerance { get; protected set; } = parryTolerance; //In degrees
 
 	/// <summary>
-	/// For the Player character, attacks are always parries.
+	/// 
 	/// </summary>
 	public void Parry() {
 		if (AttackCooldownRemaining > 0) return;
@@ -104,24 +130,31 @@ internal class Player(
 		// Check if there is an enemy within `ParryRange` in the `FaceDirection`.
 		Projectile[] projectiles = [.. EntityManager
 			.GetAllEntitiesInRadius<Projectile>(Position, ParryRange)
-			.Where(e => Vector2.Dot(Vector2.Normalize(e.Position - Position), FaceDirection) > ParryTolerance)
 			.OrderBy(p => Vector2.Distance(Position, p.Position))
 		];
 
 		// No projectiles to parry.
 		if (projectiles.Length == 0) {
+			Log.Me(() => "Parry failed!");
 			AttackCooldownRemaining = AttackCooldown;
 			return;
 		}
 
+		// Parry the closest projectile.
 		Projectile projectile = projectiles[0];
 
-		// Parry the projectile: Heal self for half damage, deal half damage to owner.
-		int effectOnTarget = (int) Math.Round(projectile.Owner.Damage / 2f);
-		Health = Math.Min(Health + effectOnTarget, MaxHealth);
-		projectile.Owner.TakeDamage(effectOnTarget);
+		// Parry the projectile, Heal self for half damage.
+		int healAmount = (projectile.Owner.Damage + 1) / 2;
+
+		int newHealth = Math.Min(Health + healAmount, MaxHealth);
+
+		Health = Math.Min(Health + healAmount, MaxHealth);
+
+		// Reflect the projectile
+		projectile.Parry(FaceDirection, this);
 
 		//TODO: AVFX here.
+		SoundPlayer.Play("Player - Parry");
 
 		AttackCooldownRemaining = AttackCooldown;
 	}
@@ -146,6 +179,7 @@ internal class Player(
 		if (DashCooldownRemaining > 0) return;
 
 		//TODO: AVFX here.
+		SoundPlayer.Play("Player - Dash");
 
 		//Check if there are any enemies in the dash direction within a certain range.
 		Enemy[] enemies = [.. EntityManager

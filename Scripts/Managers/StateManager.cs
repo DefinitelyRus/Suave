@@ -11,5 +11,16 @@ internal class StateManager {
 
 	public static States CurrentState { get; set; } = States.Menu;
 
-	public static bool IsPaused => CurrentState == States.Paused;
+	public static bool IsPaused => CurrentState != States.Playing;
+
+	private static States previousState = States.Menu;
+
+	public static void TogglePause() {
+		if (IsPaused) CurrentState = previousState; 
+		
+		else {
+			previousState = CurrentState;
+			CurrentState = States.Paused;
+		}
+	}
 }

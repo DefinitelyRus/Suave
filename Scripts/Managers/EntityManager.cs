@@ -69,7 +69,6 @@ internal static class EntityManager {
 
 		while (RegisterQueue.Count > 0) {
 			Entity entity = RegisterQueue.Dequeue();
-			Log.Me(() => $"Registering {entity.EntityId}...");
 
 			AssignInstanceId(entity);
 
@@ -120,8 +119,6 @@ internal static class EntityManager {
 
 		while (UnregisteredEntities.Count > 0) {
 			Entity entity = UnregisteredEntities.Dequeue();
-
-			Log.Me(() => $"Unregistering {entity.InstanceId}...");
 
 			switch (entity) {
 				case Character character:

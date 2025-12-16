@@ -24,7 +24,7 @@ internal class Projectile : PhysicalEntity {
 	/// </summary>
 	public bool IsLaunched = false;
 
-	public Projectile(string name, string entityId, Character owner, float hitRadius = 4f, float speed = 640f, float lifespan = 4f) : base(name, entityId, Vector2.Zero, hitRadius) {
+	public Projectile(string name, string entityId, Character owner, float hitRadius = 4f, float speed = 480f, float lifespan = 4f) : base(name, entityId, Vector2.Zero, hitRadius) {
 		Position = owner.Position;
 		Owner = owner;
 		Speed = speed;
@@ -50,14 +50,7 @@ internal class Projectile : PhysicalEntity {
 		}
 
 		// Check for collision
-		bool collided = CheckCharacterCollision(out Character? collidingCharacter);
-		if (!collided) return;
-
-		collidingCharacter!.TakeDamage(Owner.Damage);
-
-		//TODO: AVFX here.
-
-		Despawn();
+		CheckCharacterCollision();
 	}
 
 	#endregion
@@ -89,7 +82,7 @@ internal class Projectile : PhysicalEntity {
 		Launch(directionToTarget);
 	}
 
-	protected bool CheckCharacterCollision(out Character? collidingCharacter) {
+	protected void CheckCharacterCollision() {
 		// Check for collisions with entities.
 		Character[] characters = [.. EntityManager
 			.GetAllEntitiesInRadius<Character>(Position, HitRadius)
@@ -97,8 +90,32 @@ internal class Projectile : PhysicalEntity {
 			.OrderBy(c => Vector2.Distance(Position, c.Position))
 		];
 
-		collidingCharacter = characters.Length > 0 ? characters[0] : null;
-		return characters.Length == 0;
+		if (characters.Length == 0) return;
+
+		Character collidingCharacter = characters[0];
+
+		// Prevent friendly fire.
+		bool isOwnerEnemy = Owner is Enemy;
+		bool isCollidingCharacterEnemy = collidingCharacter is Enemy;
+		if (isOwnerEnemy && isCollidingCharacterEnemy) return;
+		if (!isOwnerEnemy && !isCollidingCharacterEnemy) return;
+
+		collidingCharacter.TakeDamage(Owner.Damage);
+
+
+		Despawn();
+
+		return;
+	}
+
+	#endregion
+
+	#region Parrying
+
+	public void Parry(Vector2 newDirection, Character newOwner) {
+		Direction = Vector2.Normalize(newDirection);
+		Speed *= 3;
+		Owner = newOwner;
 	}
 
 	#endregion

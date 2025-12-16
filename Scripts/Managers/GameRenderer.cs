@@ -18,6 +18,7 @@ internal class GameRenderer {
 	}
 
 	public static void Update() {
+		Raylib.ClearBackground(Color.White);
 		Raylib.DrawTexture(Background, 0, 0, Color.White);
 
 		//switch (StateManager.State) {

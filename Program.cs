@@ -6,8 +6,8 @@ namespace Suave;
 internal class Program {
     static void Main() {
         Raylib.SetTraceLogLevel(TraceLogLevel.Warning);
-        GameRenderer.Init();
-        SoundPlayer.Init();
+		SoundPlayer.Init();
+		GameRenderer.Init();
         GameManager.Init();
         LevelManager.Init();
         
@@ -16,7 +16,7 @@ internal class Program {
 
             if (!StateManager.IsPaused) {
                 float delta = Raylib.GetFrameTime();
-                InputManager.Update();
+                InputManager.Update(delta);
 				LevelManager.Update(delta);
                 EntityManager.Update(delta);
                 GameRenderer.Update();

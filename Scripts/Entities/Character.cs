@@ -26,6 +26,7 @@ internal abstract class Character : PhysicalEntity {
 		hitRadius
 	) {
 		Health = maxHealth;
+		MaxHealth = maxHealth;
 		Damage = damage;
 		AttackRange = attackRange;
 		AttackCooldown = attackCooldown;
@@ -46,7 +47,7 @@ internal abstract class Character : PhysicalEntity {
 	}
 
 	public override void Render(float _) {
-		SpriteRenderer.Render(EntityId, Position, FaceDirection, 0.2f);
+		SpriteRenderer.Render(EntityId, Position, FaceDirection, 0.15f);
 	}
 
 	public virtual void ResetContemporaryValues() {
@@ -70,10 +71,18 @@ internal abstract class Character : PhysicalEntity {
 	public void TakeDamage(int amount) {
 		Health -= amount;
 
+		SoundPlayer.Play(ResourceManager.GetSound("Character - Hurt"));
+
 		if (Health < 0) {
 			Health = 0;
 			Despawn();
 		}
+	}
+
+	public override void Despawn() {
+		base.Despawn();
+
+		SoundPlayer.Play(ResourceManager.GetSound("Character - Death"));
 	}
 
 	#endregion
@@ -100,14 +109,18 @@ internal abstract class Character : PhysicalEntity {
 		FaceTowards(target.Position, delta);
 	}
 
+	public void MoveTowardsDirection(Vector2 direction, float delta) {
+		MoveDirection = Vector2.Normalize(direction);
+		Position += MoveDirection * MoveSpeed * delta;
+	}
+
 	/// <summary>
 	/// Move towards the target position.
 	/// </summary>
 	/// <param name="targetPosition">The position to move towards.</param>
 	/// <param name="delta">The time the current and the previous frame.</param>
-	public void MoveTowards(Vector2 targetPosition, float delta) {
+	public void MoveTowardsPosition(Vector2 targetPosition, float delta) {
 		MoveDirection = Vector2.Normalize(targetPosition - Position);
-
 		Position += MoveDirection * MoveSpeed * delta;
 	}
 

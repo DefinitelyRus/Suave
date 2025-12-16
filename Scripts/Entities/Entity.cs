@@ -63,7 +63,7 @@ internal abstract class Entity {
 	/// Unregisters the entity from the <see cref="EntityManager"/>,
 	/// effectively removing it from the game world.
 	/// </summary>
-	public void Despawn() {
+	public virtual void Despawn() {
 		EntityManager.UnregisterEntity(this);
 	}
 

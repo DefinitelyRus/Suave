@@ -29,7 +29,7 @@ internal abstract class Enemy(
 
 	#region General
 
-	public void Attack(Character target) {
+	public virtual void Attack(Character target) {
 		if (AttackCooldownRemaining > 0) return;
 
 		Bullet bullet = new(this);
@@ -61,10 +61,10 @@ internal abstract class Enemy(
 
 	public EnemyState CurrentState { get; protected set; } = EnemyState.Idle;
 
-	private void UpdateState(Character targetCharacter, float _) {
+	private void UpdateState(Character targetCharacter, float delta) {
 		float distanceToTarget = Vector2.Distance(Position, targetCharacter.Position);
-
-		if (distanceToTarget <= AvoidRange) CurrentState = EnemyState.Avoiding;
+		
+		if (AvoidCharacter(delta)) return;
 		else if (distanceToTarget <= AttackRange * 0.9f) CurrentState = EnemyState.Attacking;
 		else if (distanceToTarget <= AggroRange) CurrentState = EnemyState.Aggro;
 		else CurrentState = EnemyState.Idle;
@@ -76,15 +76,13 @@ internal abstract class Enemy(
 				break;
 
 			case EnemyState.Aggro:
-				MoveTowards(targetCharacter.Position, delta);
+				FaceDirection = Vector2.Normalize(targetCharacter.Position - Position);
+				MoveTowardsPosition(targetCharacter.Position, delta);
 				break;
 
 			case EnemyState.Attacking:
+				FaceDirection = Vector2.Normalize(targetCharacter.Position - Position);
 				Attack(targetCharacter);
-				break;
-
-			case EnemyState.Avoiding:
-				AvoidCharacter(targetCharacter, delta);
 				break;
 		}
 	}
@@ -99,10 +97,22 @@ internal abstract class Enemy(
 	public const float AvoidSpeedMultiplier = 2f;
 	public const float AvoidDistanceBuffer = 1.2f;
 
-	public void AvoidCharacter(Character targetCharacter, float delta) {
+	public bool AvoidCharacter(float delta) {
+		// Find the nearest character to avoid
+		Character? targetCharacter = EntityManager
+			.GetAllEntitiesInRadius<Character>(Position, AvoidRange)
+			.Where(c => c != this)
+			.OrderBy(c => Vector2.Distance(Position, c.Position))
+			.FirstOrDefault();
+
+		// No character to avoid
+		if (targetCharacter == null) return false;
+
+		// Move away from the target character
 		Vector2 directionAwayFromTarget = Vector2.Normalize(Position - targetCharacter.Position);
 		Vector2 targetPosition = Position + directionAwayFromTarget * AvoidRange * AvoidDistanceBuffer;
-		MoveTowards(targetPosition, delta * AvoidSpeedMultiplier);
+		MoveTowardsPosition(targetPosition, delta * AvoidSpeedMultiplier);
+		return true;
 	}
 
 	#endregion
