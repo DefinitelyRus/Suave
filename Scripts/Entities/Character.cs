@@ -31,8 +31,8 @@ internal abstract class Character : PhysicalEntity {
 		AttackCooldown = attackCooldown;
 		MoveSpeed = moveSpeed;
 
-		float x = Raylib.GetRandomValue(0, 1);
-		float y = Raylib.GetRandomValue(0, 1);
+		float x = (float) Raylib.GetRandomValue(-100, 100) / 100;
+		float y = (float) Raylib.GetRandomValue(-100, 100) / 100;
 		FaceDirection = Vector2.Normalize(new Vector2(x, y));
 	}
 
