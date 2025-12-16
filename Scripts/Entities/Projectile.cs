@@ -25,7 +25,7 @@ internal class Projectile : PhysicalEntity {
 	/// </summary>
 	public bool IsLaunched = false;
 
-	public Projectile(string name, string entityId, Character owner, float hitRadius = 4f, float speed = 640f, float lifespan = 4f) : base(name, entityId, Vector2.Zero, hitRadius) {
+	public Projectile(string name, string entityId, Character owner, float hitRadius = 4f, float speed = 480f, float lifespan = 4f) : base(name, entityId, Vector2.Zero, hitRadius) {
 		Position = owner.Position;
 		Owner = owner;
 		Speed = speed;
