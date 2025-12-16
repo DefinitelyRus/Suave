@@ -70,6 +70,8 @@ internal abstract class Character : PhysicalEntity {
 	public void TakeDamage(int amount) {
 		Health -= amount;
 
+		SoundPlayer.Play(ResourceManager.GetSound("Character - Hurt"));
+
 		if (Health < 0) {
 			Health = 0;
 			Despawn();

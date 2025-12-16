@@ -23,4 +23,12 @@ internal class EnemyGrunt : Enemy {
 		Position = position;
 		CurrentTexture = ResourceManager.GetTexture("Enemy Grunt");
 	}
+
+	public override void Attack(Character target) {
+		// TODO: AVFX here.
+		if (AttackCooldownRemaining > 0) return;
+		SoundPlayer.Play("Grunt - Attack");
+
+		base.Attack(target);
+	}
 }

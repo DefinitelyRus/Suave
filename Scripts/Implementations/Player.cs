@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Suave.Scripts.Entities;
 using Suave.Scripts.Managers;
+using Suave.Scripts.Tools;
 namespace Suave.Scripts.Implementations;
 
 internal class Player(
@@ -77,7 +78,6 @@ internal class Player(
 		Projectile projectile = projectiles[0];
 		float distanceToProjectile = Vector2.Distance(Position, projectile.Position);
 
-
 		// Failed to dodge.
 		if (distanceToProjectile <= HitRadius) {
 			Character self = this;
@@ -91,6 +91,7 @@ internal class Player(
 		DamageCooldownRemaining = DamageCooldown;
 
 		//TODO: AVFX here.
+		SoundPlayer.Play("Player - Near Miss");
 	}
 
 	#endregion
@@ -132,6 +133,7 @@ internal class Player(
 		projectile.Parry(FaceDirection, this);
 
 		//TODO: AVFX here.
+		SoundPlayer.Play("Player - Parry");
 
 		AttackCooldownRemaining = AttackCooldown;
 	}
@@ -156,6 +158,7 @@ internal class Player(
 		if (DashCooldownRemaining > 0) return;
 
 		//TODO: AVFX here.
+		SoundPlayer.Play("Player - Dash");
 
 		//Check if there are any enemies in the dash direction within a certain range.
 		Enemy[] enemies = [.. EntityManager
