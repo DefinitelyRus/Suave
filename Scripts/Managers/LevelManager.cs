@@ -17,9 +17,9 @@ internal static class LevelManager {
 			// Level 1
 			new Level(
 				timeLimit: 120f,
-				waveCount: 3,
+				waveCount: 2,
 				enemiesToSpawn: [
-					new PackedEnemy(typeof(EnemyGrunt), 3)
+					new PackedEnemy(typeof(EnemyGrunt), 4)
 				],
 				"Level 1"
 			),
@@ -27,10 +27,10 @@ internal static class LevelManager {
 			// Level 2
 			new Level(
 				timeLimit: 180f,
-				waveCount: 3,
+				waveCount: 2,
 				enemiesToSpawn: [
-					new PackedEnemy(typeof(EnemyGrunt), 3),
-					new PackedEnemy(typeof(EnemyBetterGrunt), 3)
+					new PackedEnemy(typeof(EnemyGrunt), 2),
+					new PackedEnemy(typeof(EnemyBetterGrunt), 2)
 				],
 				"Level 2"
 			),
@@ -38,7 +38,7 @@ internal static class LevelManager {
 			// Level 3
 			new Level(
 				timeLimit: 180f,
-				waveCount: 4,
+				waveCount: 3,
 				enemiesToSpawn: [
 					new PackedEnemy(typeof(EnemyBerserker), 2),
 					new PackedEnemy(typeof(EnemySniper), 2)
@@ -62,10 +62,10 @@ internal static class LevelManager {
 			// Level 5
 			new Level(
 				timeLimit: 180f,
-				waveCount: 3,
+				waveCount: 1,
 				enemiesToSpawn: [
-					new PackedEnemy(typeof(EnemyGrunt), 3),
-					new PackedEnemy(typeof(EnemyBetterGrunt), 3)
+					new PackedEnemy(typeof(EnemyBoss), 2),
+					new PackedEnemy(typeof(EnemyBetterGrunt), 8)
 				],
 				"Level 5"
 			)
