@@ -29,7 +29,7 @@ internal abstract class Enemy(
 
 	#region General
 
-	public void Attack(Character target) {
+	public virtual void Attack(Character target) {
 		if (AttackCooldownRemaining > 0) return;
 
 		Bullet bullet = new(this);
