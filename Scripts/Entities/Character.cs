@@ -79,6 +79,12 @@ internal abstract class Character : PhysicalEntity {
 		}
 	}
 
+	public override void Despawn() {
+		base.Despawn();
+
+		SoundPlayer.Play(ResourceManager.GetSound("Character - Death"));
+	}
+
 	#endregion
 
 	#region Movement
