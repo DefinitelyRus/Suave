@@ -203,10 +203,15 @@ internal class Player(
 			DashCooldownRemaining = DashHitCooldown;
 
 			// Damage Enemy
-			enemies[0].TakeDamage(Damage + DamageBonus + DashHitDamageBonus);
+			int totalDamage = Damage + DamageBonus + DashHitDamageBonus;
+			bool enoughDamage = DamageBonus >= 4;
+			bool willKill = enemies[0].Health <= totalDamage;
+			enemies[0].TakeDamage(totalDamage);
 			DamageBonus = 0;
 
 			//TODO: AVFX here.
+			if (enoughDamage && willKill) SoundPlayer.Play("Player - Dash Kill");
+			else SoundPlayer.Play("Player - Dash Hit");
 
 			return;
 		}
