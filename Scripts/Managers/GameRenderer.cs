@@ -4,6 +4,7 @@ namespace Suave.Scripts.Managers;
 internal class GameRenderer {
 	public const int SizeX = 1280;
 	public const int SizeY = 720;
+	public const int FPS = 200;
 	public static int CenterX => SizeX / 2;
 	public static int CenterY => SizeY / 2;
 
@@ -13,6 +14,7 @@ internal class GameRenderer {
 
 	public static void Init() {
 		Raylib.InitWindow(SizeX, SizeY, Title);
+		Raylib.SetTargetFPS(FPS);
 		ResourceManager.PreloadAssets();
 		Background = ResourceManager.GetTexture("Background");
 	}
