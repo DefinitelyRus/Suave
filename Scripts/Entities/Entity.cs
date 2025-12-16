@@ -29,7 +29,6 @@ internal abstract class Entity {
 			return _position;
 		}
 		set {
-			Log.Me(() => $"Set position to {value} for {EntityId}.");
 			_position = value;
 		}
 	}
