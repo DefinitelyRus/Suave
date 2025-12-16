@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Suave.Scripts.Implementations;
 using Suave.Scripts.Managers;
 
 namespace Suave.Scripts.Entities;
@@ -50,14 +51,7 @@ internal class Projectile : PhysicalEntity {
 		}
 
 		// Check for collision
-		bool collided = CheckCharacterCollision(out Character? collidingCharacter);
-		if (!collided) return;
-
-		collidingCharacter!.TakeDamage(Owner.Damage);
-
-		//TODO: AVFX here.
-
-		Despawn();
+		CheckCharacterCollision();
 	}
 
 	#endregion
@@ -89,7 +83,7 @@ internal class Projectile : PhysicalEntity {
 		Launch(directionToTarget);
 	}
 
-	protected bool CheckCharacterCollision(out Character? collidingCharacter) {
+	protected void CheckCharacterCollision() {
 		// Check for collisions with entities.
 		Character[] characters = [.. EntityManager
 			.GetAllEntitiesInRadius<Character>(Position, HitRadius)
@@ -97,8 +91,26 @@ internal class Projectile : PhysicalEntity {
 			.OrderBy(c => Vector2.Distance(Position, c.Position))
 		];
 
-		collidingCharacter = characters.Length > 0 ? characters[0] : null;
-		return characters.Length == 0;
+		if (characters.Length == 0) return;
+
+		Character collidingCharacter = characters[0];
+
+		// Prevent friendly fire.
+		bool isOwnerEnemy = Owner is Enemy;
+		bool isCollidingCharacterEnemy = collidingCharacter is Enemy;
+		if (isOwnerEnemy && isCollidingCharacterEnemy) return;
+		if (!isOwnerEnemy && !isCollidingCharacterEnemy) return;
+
+		collidingCharacter.TakeDamage(Owner.Damage);
+
+		//TODO: AVFX here.
+
+		Despawn();
+
+		return;
+	}
+
+	#endregion
 	}
 
 	#endregion
