@@ -70,10 +70,6 @@ internal static class LevelManager {
 				"Level 5"
 			)
 		];
-
-		//TODO: Trigger this via main menu, not immediately.
-		StateManager.CurrentState = StateManager.States.Playing;
-		StartLevel(0); 
 	}
 
 	public static void Update(float delta) {
