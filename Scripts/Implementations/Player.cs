@@ -42,6 +42,8 @@ internal class Player(
 			if (DashCooldownRemaining < 0) DashCooldownRemaining = 0;
 		}
 
+		CheckNearMiss(delta);
+
 		base.Update(delta);
 	}
 
@@ -63,9 +65,21 @@ internal class Player(
 
 	private float DamageCooldownRemaining { get; set; } = 0.0f;
 
-	public void CheckNearMiss() {
+	private const float DodgeCooldown = 0.2f;
+
+	private float DodgeCooldownRemaining { get; set; } = 0.0f;
+
+	public void CheckNearMiss(float delta) {
 		// Dodges only trigger if Player can also take damage.
-		if (DamageCooldownRemaining > 0) return;
+		if (DamageCooldownRemaining <= 0) return;
+
+		// Handle Dodge Cooldown
+		if (DodgeCooldownRemaining > 0) {
+			DodgeCooldownRemaining -= delta;
+			if (DodgeCooldownRemaining < 0) DodgeCooldownRemaining = 0;
+
+			return;
+		}
 
 		Projectile[] projectiles = [.. EntityManager
 			.GetAllEntitiesInRadius<Projectile>(Position, HitRadius + NearMissRange)
@@ -80,15 +94,20 @@ internal class Player(
 
 		// Failed to dodge.
 		if (distanceToProjectile <= HitRadius) {
+			Log.Me(() => $"Dodge failed! Projectile at distance {distanceToProjectile}.");
+
 			Character self = this;
 			self.TakeDamage(projectile.Owner.Damage);
 
 			return;
 		}
 
+		Log.Me(() => $"Near miss detected! Projectile at distance {distanceToProjectile}.");
+
 		// Successful dodge.
 		DamageBonus += 1;
 		DamageCooldownRemaining = DamageCooldown;
+		DodgeCooldownRemaining = DodgeCooldown;
 
 		//TODO: AVFX here.
 		SoundPlayer.Play("Player - Near Miss");
