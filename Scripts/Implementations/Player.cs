@@ -119,10 +119,10 @@ internal class Player(
 
 	public float ParryRange => AttackRange;
 
-	public float ParryTolerance { get; protected set; } = parryTolerance;
+	public float ParryTolerance { get; protected set; } = parryTolerance; //In degrees
 
 	/// <summary>
-	/// For the Player character, attacks are always parries.
+	/// 
 	/// </summary>
 	public void Parry() {
 		if (AttackCooldownRemaining > 0) return;
@@ -130,7 +130,6 @@ internal class Player(
 		// Check if there is an enemy within `ParryRange` in the `FaceDirection`.
 		Projectile[] projectiles = [.. EntityManager
 			.GetAllEntitiesInRadius<Projectile>(Position, ParryRange)
-			.Where(e => Vector2.Dot(Vector2.Normalize(e.Position - Position), FaceDirection) > ParryTolerance)
 			.OrderBy(p => Vector2.Distance(Position, p.Position))
 		];
 
@@ -144,9 +143,12 @@ internal class Player(
 		// Parry the closest projectile.
 		Projectile projectile = projectiles[0];
 
-		// Parry the projectile: Heal self for half damage, deal half damage to owner.
-		int effectOnTarget = (int) Math.Round(projectile.Owner.Damage / 2f);
-		Health = Math.Min(Health + effectOnTarget, MaxHealth);
+		// Parry the projectile, Heal self for half damage.
+		int healAmount = (projectile.Owner.Damage + 1) / 2;
+
+		int newHealth = Math.Min(Health + healAmount, MaxHealth);
+
+		Health = Math.Min(Health + healAmount, MaxHealth);
 
 		// Reflect the projectile
 		projectile.Parry(FaceDirection, this);
