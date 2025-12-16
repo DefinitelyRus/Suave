@@ -3,6 +3,7 @@ using Raylib_cs;
 namespace Suave.Scripts.Managers;
 
 internal class InputManager {
+	public const KeyboardKey Start = KeyboardKey.Enter;
 	public const KeyboardKey Pause = KeyboardKey.Space;
 	public const KeyboardKey Reset = KeyboardKey.F5;
 
