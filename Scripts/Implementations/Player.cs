@@ -83,7 +83,7 @@ internal class Player(
 			Character self = this;
 			self.TakeDamage(projectile.Owner.Damage);
 
-			Despawn();
+			return;
 		}
 	}
 
