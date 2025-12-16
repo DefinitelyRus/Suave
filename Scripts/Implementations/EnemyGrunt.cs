@@ -9,16 +9,15 @@ internal class EnemyGrunt : Enemy {
 		name: "Grunt",
 		entityId: "EnemyGrunt",
 		position: position,
-		hitRadius: 32f,
+		hitRadius: 50f,
 		maxHealth: 12,
 		damage: 1,
-		attackRange: 128f,
+		attackRange: 200f,
 		attackCooldown: 1f,
-		moveSpeed: 64f,
-		aggroRange: 192f,
-		avoidRange: 48f
-		)
-	{
+		moveSpeed: 80f,
+		aggroRange: 500f,
+		avoidRange: 50f
+		) {
 		Name = "Grunt";
 		EntityId = "EnemyGrunt";
 		Position = position;
