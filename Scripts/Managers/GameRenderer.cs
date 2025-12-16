@@ -19,7 +19,7 @@ internal class GameRenderer {
 		Background = ResourceManager.GetTexture("Background");
 	}
 
-	public static void Update() {
+	public static void Update(float _) {
 		Raylib.ClearBackground(Color.White);
 		Raylib.DrawTexture(Background, 0, 0, Color.White);
 
