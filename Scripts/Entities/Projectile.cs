@@ -111,6 +111,12 @@ internal class Projectile : PhysicalEntity {
 	}
 
 	#endregion
+
+	#region Parrying
+
+	public void Parry(Vector2 newDirection, Character newOwner) {
+		Direction = Vector2.Normalize(newDirection);
+		Owner = newOwner;
 	}
 
 	#endregion
