@@ -100,14 +100,18 @@ internal abstract class Character : PhysicalEntity {
 		FaceTowards(target.Position, delta);
 	}
 
+	public void MoveTowardsDirection(Vector2 direction, float delta) {
+		MoveDirection = Vector2.Normalize(direction);
+		Position += MoveDirection * MoveSpeed * delta;
+	}
+
 	/// <summary>
 	/// Move towards the target position.
 	/// </summary>
 	/// <param name="targetPosition">The position to move towards.</param>
 	/// <param name="delta">The time the current and the previous frame.</param>
-	public void MoveTowards(Vector2 targetPosition, float delta) {
+	public void MoveTowardsPosition(Vector2 targetPosition, float delta) {
 		MoveDirection = Vector2.Normalize(targetPosition - Position);
-
 		Position += MoveDirection * MoveSpeed * delta;
 	}
 
