@@ -107,10 +107,16 @@ internal static class LevelManager {
 
 	#region Wave Management
 
-	private static uint CurrentWave = 1;
+	private static uint CurrentWave { get; set; } = 1;
 
-	public static void StartWave() {
-		Task.Run(() => SpawnEnemies(CurrentLevel!));
+	private static bool DoneSpawningWave { get; set; } = false;
+
+	public static async void StartWave() {
+		DoneSpawningWave = false;
+		CurrentWave++;
+		Log.Me(() => $"Wave {CurrentWave} starting!");
+		await Task.Run(() => SpawnEnemies(CurrentLevel!));
+		DoneSpawningWave = true;
 	}
 
 	public static void ScanWave(float _) {
