@@ -99,10 +99,22 @@ internal abstract class Enemy(
 	public const float AvoidSpeedMultiplier = 2f;
 	public const float AvoidDistanceBuffer = 1.2f;
 
-	public void AvoidCharacter(Character targetCharacter, float delta) {
+	public bool AvoidCharacter(float delta) {
+		// Find the nearest character to avoid
+		Character? targetCharacter = EntityManager
+			.GetAllEntitiesInRadius<Character>(Position, AvoidRange)
+			.Where(c => c != this)
+			.OrderBy(c => Vector2.Distance(Position, c.Position))
+			.FirstOrDefault();
+
+		// No character to avoid
+		if (targetCharacter == null) return false;
+
+		// Move away from the target character
 		Vector2 directionAwayFromTarget = Vector2.Normalize(Position - targetCharacter.Position);
 		Vector2 targetPosition = Position + directionAwayFromTarget * AvoidRange * AvoidDistanceBuffer;
-		MoveTowards(targetPosition, delta * AvoidSpeedMultiplier);
+		MoveTowardsPosition(targetPosition, delta * AvoidSpeedMultiplier);
+		return true;
 	}
 
 	#endregion
