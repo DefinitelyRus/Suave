@@ -12,17 +12,19 @@ internal class Program {
         LevelManager.Init();
         
         while (!Raylib.WindowShouldClose()) {
-            Raylib.BeginDrawing();
+			Raylib.BeginDrawing();
 
-            if (!StateManager.IsPaused) {
-                float delta = Raylib.GetFrameTime();
-				GameRenderer.Update(delta);
-				InputManager.Update(delta);
+			float delta = Raylib.GetFrameTime();
+			InputManager.Update(delta);
+			GameRenderer.Update(delta);
+
+			if (StateManager.IsPlaying) {
 				LevelManager.Update(delta);
                 EntityManager.Update(delta);
-
 				EntityManager.ProcessEntityRegistration(delta);
             }
+
+			else EntityManager.Render(delta);
 
 			Raylib.EndDrawing();
 		}

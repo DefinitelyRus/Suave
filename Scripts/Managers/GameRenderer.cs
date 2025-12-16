@@ -20,27 +20,30 @@ internal class GameRenderer {
 	}
 
 	public static void Update(float _) {
-		Raylib.ClearBackground(Color.Red);
-		Raylib.DrawTexture(Background, 0, 0, Color.White);
 
 		switch (StateManager.CurrentState) {
 			case StateManager.States.Playing:
+				Raylib.DrawTexture(Background, 0, 0, Color.White);
 				UIManager.DrawHUD();
 				break;
 
 			case StateManager.States.Paused:
+				Raylib.DrawTexture(Background, 0, 0, Color.DarkGray);
 				UIManager.DrawPaused();
 				break;
 
 			case StateManager.States.Menu:
+				Raylib.ClearBackground(Color.Red);
 				UIManager.DrawMenu();
 				break;
 
 			case StateManager.States.Win:
+				Raylib.ClearBackground(Color.SkyBlue);
 				UIManager.DrawWin();
 				break;
 
 			case StateManager.States.Lose:
+				Raylib.ClearBackground(Color.Black);
 				UIManager.DrawLose();
 				break;
 		}

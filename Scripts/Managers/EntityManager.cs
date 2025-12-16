@@ -185,6 +185,12 @@ internal static class EntityManager {
 		}
 	}
 
+	public static void Render(float _) {
+		foreach (Entity entity in Entities) {
+			entity.Render(_);
+		}
+	}
+
 	/// <summary>
 	/// Checks for a physical entity at the specified position.
 	/// </summary>
