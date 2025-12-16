@@ -9,18 +9,26 @@ internal class EnemySniper : Enemy {
 		name: "Sniper",
 		entityId: "EnemySniper",
 		position: position,
-		hitRadius: 32f,
-		maxHealth: 12,
-		damage: 3,
-		attackRange: 300f,
+		hitRadius: 50f,
+		maxHealth: 10,
+		damage: 5,
+		attackRange: 800f,
 		attackCooldown: 3f,
-		moveSpeed: 24f,
-		aggroRange: 450f,
-		avoidRange: 64f
+		moveSpeed: 48f,
+		aggroRange: 1200f,
+		avoidRange: 120f
 		) {
 		Name = "Sniper";
 		EntityId = "EnemySniper";
 		Position = position;
-		CurrentTexture = ResourceManager.GetTexture("Enemy Sniper");
+		CurrentTexture = ResourceManager.GetTexture("EnemySniper");
+	}
+
+	public override void Attack(Character target) {
+		// TODO: AVFX here.
+		if (AttackCooldownRemaining > 0) return;
+		SoundPlayer.Play("Sniper - Attack");
+
+		base.Attack(target);
 	}
 }

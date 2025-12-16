@@ -21,7 +21,7 @@ internal class EnemyGrunt : Enemy {
 		Name = "Grunt";
 		EntityId = "EnemyGrunt";
 		Position = position;
-		CurrentTexture = ResourceManager.GetTexture("Enemy Grunt");
+		CurrentTexture = ResourceManager.GetTexture("EnemyGrunt");
 	}
 
 	public override void Attack(Character target) {
