@@ -11,5 +11,5 @@ internal class StateManager {
 
 	public static States CurrentState { get; set; } = States.Menu;
 
-	public static bool IsPaused => CurrentState == States.Paused;
+	public static bool IsPaused => CurrentState != States.Playing;
 }
