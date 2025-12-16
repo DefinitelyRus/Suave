@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using Suave.Scripts.Implementations;
 using Suave.Scripts.Managers;
 
 namespace Suave.Scripts.Entities;
@@ -103,7 +102,6 @@ internal class Projectile : PhysicalEntity {
 
 		collidingCharacter.TakeDamage(Owner.Damage);
 
-		//TODO: AVFX here.
 
 		Despawn();
 
@@ -116,6 +114,7 @@ internal class Projectile : PhysicalEntity {
 
 	public void Parry(Vector2 newDirection, Character newOwner) {
 		Direction = Vector2.Normalize(newDirection);
+		Speed *= 3;
 		Owner = newOwner;
 	}
 
