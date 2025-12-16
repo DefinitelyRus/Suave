@@ -20,8 +20,7 @@ internal class ResourceManager {
 		string[] soundPaths = Directory.GetFiles(SoundPath);
 		foreach (string path in soundPaths) {
 			string fileName = Path.GetFileNameWithoutExtension(path);
-			Sound sound = Raylib.LoadSound(path);
-			Sounds.Add(fileName, sound);
+			SoundPaths.Add(fileName, path);
 		}
 	}
 
@@ -44,11 +43,10 @@ internal class ResourceManager {
 
 	public const string SoundPath = RootPath + "/Audio";
 
-	public static Dictionary<string, Sound> Sounds = [];
+	public static Dictionary<string, string> SoundPaths = [];
 
 	public static Sound GetSound(string name) {
-		if (Sounds.TryGetValue(name, out Sound sound)) return sound;
-		return default;
+		return Raylib.LoadSound(SoundPaths[name]);
 	}
 
 	#endregion
