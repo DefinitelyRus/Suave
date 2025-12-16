@@ -76,10 +76,12 @@ internal abstract class Enemy(
 				break;
 
 			case EnemyState.Aggro:
-				MoveTowards(targetCharacter.Position, delta);
+				FaceDirection = Vector2.Normalize(targetCharacter.Position - Position);
+				MoveTowardsPosition(targetCharacter.Position, delta);
 				break;
 
 			case EnemyState.Attacking:
+				FaceDirection = Vector2.Normalize(targetCharacter.Position - Position);
 				Attack(targetCharacter);
 				break;
 		}
