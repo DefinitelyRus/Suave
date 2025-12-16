@@ -26,6 +26,7 @@ internal abstract class Character : PhysicalEntity {
 		hitRadius
 	) {
 		Health = maxHealth;
+		MaxHealth = maxHealth;
 		Damage = damage;
 		AttackRange = attackRange;
 		AttackCooldown = attackCooldown;
