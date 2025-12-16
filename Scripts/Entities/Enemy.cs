@@ -61,10 +61,10 @@ internal abstract class Enemy(
 
 	public EnemyState CurrentState { get; protected set; } = EnemyState.Idle;
 
-	private void UpdateState(Character targetCharacter, float _) {
+	private void UpdateState(Character targetCharacter, float delta) {
 		float distanceToTarget = Vector2.Distance(Position, targetCharacter.Position);
-
-		if (distanceToTarget <= AvoidRange) CurrentState = EnemyState.Avoiding;
+		
+		if (AvoidCharacter(delta)) return;
 		else if (distanceToTarget <= AttackRange * 0.9f) CurrentState = EnemyState.Attacking;
 		else if (distanceToTarget <= AggroRange) CurrentState = EnemyState.Aggro;
 		else CurrentState = EnemyState.Idle;
@@ -81,10 +81,6 @@ internal abstract class Enemy(
 
 			case EnemyState.Attacking:
 				Attack(targetCharacter);
-				break;
-
-			case EnemyState.Avoiding:
-				AvoidCharacter(targetCharacter, delta);
 				break;
 		}
 	}
