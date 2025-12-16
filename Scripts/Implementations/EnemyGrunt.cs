@@ -12,7 +12,7 @@ internal class EnemyGrunt : Enemy {
 		hitRadius: 50f,
 		maxHealth: 12,
 		damage: 1,
-		attackRange: 200f,
+		attackRange: 400f,
 		attackCooldown: 1f,
 		moveSpeed: 80f,
 		aggroRange: 500f,
