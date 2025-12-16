@@ -1,7 +1,6 @@
 using System.Numerics;
 using Raylib_cs;
 using Suave.Scripts.Managers;
-using Suave.Scripts.Tools;
 
 namespace Suave.Scripts.Entities;
 
@@ -47,8 +46,7 @@ internal abstract class Character : PhysicalEntity {
 	}
 
 	public override void Render(float _) {
-		float rotation = Utilities.GetAngle(FaceDirection);
-		SpriteRenderer.Render(EntityId, Position, 0.2f, rotation);
+		SpriteRenderer.Render(EntityId, Position, FaceDirection, 0.2f);
 	}
 
 	public virtual void ResetContemporaryValues() {
