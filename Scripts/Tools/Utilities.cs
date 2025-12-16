@@ -4,8 +4,13 @@ namespace Suave.Scripts.Tools;
 
 internal static class Utilities {
 
+	/// <summary>
+	/// Converts a direction vector to an angle in degrees.
+	/// </summary>
+	/// <param name="direction"></param>
+	/// <returns></returns>
 	public static float GetAngle(Vector2 direction) {
-		float angle = MathF.Atan2(direction.Y, direction.X);
+		float angle = MathF.Atan2(direction.Y, direction.X) * (180f / MathF.PI);
 		return angle;
 	}
 
