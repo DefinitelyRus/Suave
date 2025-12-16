@@ -116,16 +116,20 @@ internal class Player(
 
 		// No projectiles to parry.
 		if (projectiles.Length == 0) {
+			Log.Me(() => "Parry failed!");
 			AttackCooldownRemaining = AttackCooldown;
 			return;
 		}
 
+		// Parry the closest projectile.
 		Projectile projectile = projectiles[0];
 
 		// Parry the projectile: Heal self for half damage, deal half damage to owner.
 		int effectOnTarget = (int) Math.Round(projectile.Owner.Damage / 2f);
 		Health = Math.Min(Health + effectOnTarget, MaxHealth);
-		projectile.Owner.TakeDamage(effectOnTarget);
+
+		// Reflect the projectile
+		projectile.Parry(FaceDirection, this);
 
 		//TODO: AVFX here.
 
