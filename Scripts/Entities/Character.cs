@@ -46,7 +46,7 @@ internal abstract class Character : PhysicalEntity {
 	}
 
 	public override void Render(float _) {
-		SpriteRenderer.Render(EntityId, Position, FaceDirection, 0.2f);
+		SpriteRenderer.Render(EntityId, Position, FaceDirection, 0.15f);
 	}
 
 	public virtual void ResetContemporaryValues() {
