@@ -124,23 +124,28 @@ internal static class LevelManager {
 	}
 
 	public static void ScanWave(float _) {
+		if (!DoneSpawningWave) return;
+
+		// Check for remaining enemies.
 		Enemy[] remainingEnemies = [.. EntityManager
 			.Characters
 			.Where(c => c is Enemy)
 			.Cast<Enemy>()
 		];
 
+		Log.Me(() => $"Remaining Enemies: {remainingEnemies.Length}");
+
+		// If enemies remain, do nothing.
 		if (remainingEnemies.Length != 0) return;
 
-		CurrentWave++;
-
-		if (CurrentWave > CurrentLevel!.Waves) {
-			Log.Me(() => "Level complete!");
-			StartLevel(CurrentLevelIndex + 1);
+		// If no enemies remain, move to next wave or level.
+		if (CurrentWave <= CurrentLevel!.Waves) {
+			StartWave();
 			return;
 		}
 
-		Log.Me(() => $"Wave {CurrentWave} starting!");
+		Log.Me(() => "Level complete!");
+		StartLevel();
 	}
 
 	#endregion
