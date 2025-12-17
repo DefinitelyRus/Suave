@@ -6,7 +6,8 @@ internal class StateManager {
 		Paused,
 		Menu,
 		Win,
-		Lose
+		Lose,
+		Transition
 	}
 
 	public static States CurrentState { get; set; } = States.Menu;
@@ -22,5 +23,13 @@ internal class StateManager {
 			previousState = CurrentState;
 			CurrentState = States.Paused;
 		}
+	}
+
+	public static async Task StartTransition() {
+		CurrentState = States.Transition;
+
+		await Task.Run(() => Thread.Sleep(1000));
+
+		CurrentState = States.Playing;
 	}
 }

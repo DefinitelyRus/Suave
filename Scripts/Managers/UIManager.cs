@@ -27,5 +27,10 @@ internal class UIManager {
     {
         Raylib.DrawText("You Lose!", 0, 550, 36, Color.Red);
         Raylib.DrawText("Press F5 to restart", 360, 600, 42, Color.White);
-    }
+	}
+
+	public static void DrawTransition() {
+		Raylib.DrawText($"Level {LevelManager.CurrentLevelIndex}", 420, 180, 120, Color.White);
+		Raylib.DrawText("Loading...", 360, 600, 42, Color.White);
+	}
 }

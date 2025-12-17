@@ -46,6 +46,11 @@ internal class GameRenderer {
 				Raylib.ClearBackground(Color.Black);
 				UIManager.DrawLose();
 				break;
+
+			case StateManager.States.Transition:
+				Raylib.ClearBackground(Color.Orange);
+				UIManager.DrawTransition();
+				break;
 		}
 	}
 }

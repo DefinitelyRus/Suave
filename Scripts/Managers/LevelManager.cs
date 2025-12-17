@@ -86,7 +86,7 @@ internal static class LevelManager {
 	public static Level[] Levels = [];
 	public static Level? CurrentLevel = null;
 
-	public static void StartLevel(int levelIndex = -1) {
+	public static async void StartLevel(int levelIndex = -1) {
 		// Use current level index if none specified.
 		if (levelIndex < 0) levelIndex = (int) ++CurrentLevelIndex;
 
@@ -105,6 +105,8 @@ internal static class LevelManager {
 		player.ResetContemporaryValues();
 		player.Position = PlayerSpawnPosition;
 
+		await StateManager.StartTransition();
+
 		StartWave();
 	}
 
@@ -112,7 +114,7 @@ internal static class LevelManager {
 
 	#region Wave Management
 
-	private static uint CurrentWave { get; set; } = 1;
+	private static uint CurrentWave { get; set; } = 0;
 
 	private static bool DoneSpawningWave { get; set; } = false;
 
@@ -133,8 +135,6 @@ internal static class LevelManager {
 			.Where(c => c is Enemy)
 			.Cast<Enemy>()
 		];
-
-		Log.Me(() => $"Remaining Enemies: {remainingEnemies.Length}");
 
 		// If enemies remain, do nothing.
 		if (remainingEnemies.Length != 0) return;

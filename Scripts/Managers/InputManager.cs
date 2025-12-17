@@ -46,7 +46,6 @@ internal class InputManager {
 
 				// Start the game
 				if (Raylib.IsKeyPressed(Start)) {
-					StateManager.CurrentState = StateManager.States.Playing;
 					LevelManager.StartLevel(0);
 				}
 
