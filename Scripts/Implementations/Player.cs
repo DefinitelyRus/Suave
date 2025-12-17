@@ -112,7 +112,9 @@ internal class Player(
 
 	public float ParryRange => AttackRange;
 
-	public float ParryTolerance { get; protected set; } = parryTolerance; //In degrees
+	private float ParryMissCooldown => AttackCooldown;
+
+	private const float ParryHitCooldown = 0.4f;
 
 	/// <summary>
 	/// 
@@ -129,27 +131,26 @@ internal class Player(
 		// No projectiles to parry.
 		if (projectiles.Length == 0) {
 			Log.Me(() => "Parry failed!");
-			AttackCooldownRemaining = AttackCooldown;
+			AttackCooldownRemaining = ParryMissCooldown;
 			return;
 		}
 
 		// Parry the closest projectile.
 		Projectile projectile = projectiles[0];
-
-		// Parry the projectile, Heal self for half damage.
-		int healAmount = (projectile.Owner.Damage + 1) / 2;
-
-		int newHealth = Math.Min(Health + healAmount, MaxHealth);
-
-		Health = Math.Min(Health + healAmount, MaxHealth);
-
-		// Reflect the projectile
 		projectile.Parry(FaceDirection, this);
+
+		// Heal self for 3x the damage
+		int triple = projectile.Owner.Damage * 3;
+		int newHealth = Math.Min(Health + triple, MaxHealth);
+		Health = Math.Min(Health + triple, MaxHealth);
+
+		// Increase damage bonus by 3x the damage
+		DamageBonus += triple;
 
 		//TODO: AVFX here.
 		SoundPlayer.Play("Player - Parry");
 
-		AttackCooldownRemaining = AttackCooldown;
+		AttackCooldownRemaining = ParryHitCooldown;
 	}
 
 	#endregion
