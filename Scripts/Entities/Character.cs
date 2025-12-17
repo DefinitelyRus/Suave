@@ -1,5 +1,6 @@
 using System.Numerics;
 using Raylib_cs;
+using Suave.Scripts.Implementations;
 using Suave.Scripts.Managers;
 
 namespace Suave.Scripts.Entities;
@@ -72,6 +73,7 @@ internal abstract class Character : PhysicalEntity {
 		Health -= amount;
 
 		SoundPlayer.Play(ResourceManager.GetSound("Character - Hurt"));
+		_ = new ParticleCharacterHurt(Position, FaceDirection);
 
 		if (Health < 0) {
 			Health = 0;

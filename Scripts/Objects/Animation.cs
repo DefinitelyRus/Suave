@@ -22,8 +22,6 @@ internal class Animation {
 				index++;
 				Texture2D texture = ResourceManager.GetTexture(key);
 				Frames.Add(texture);
-
-				Log.Me(() => $"Added '{keyFullName}' to Frames.");
 			}
 		}
 

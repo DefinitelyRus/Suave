@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Suave.Scripts.Entities;
 using Suave.Scripts.Managers;
+using Suave.Scripts.Objects;
 using Suave.Scripts.Tools;
 namespace Suave.Scripts.Implementations;
 
@@ -104,6 +105,7 @@ internal class Player(
 		DodgeCooldownRemaining = DodgeCooldown;
 
 		//TODO: AVFX here.
+		_ = new ParticleNearMiss(Position, FaceDirection);
 		SoundPlayer.Play("Player - Near Miss");
 	}
 
@@ -150,6 +152,7 @@ internal class Player(
 
 		//TODO: AVFX here.
 		SoundPlayer.Play("Player - Parry");
+		_ = new ParticleParry(Position, FaceDirection);
 
 		AttackCooldownRemaining = ParryHitCooldown;
 	}
@@ -175,6 +178,7 @@ internal class Player(
 
 		//TODO: AVFX here.
 		SoundPlayer.Play("Player - Dash");
+		_ = new ParticleDash(Position, FaceDirection);
 
 		//Check if there are any enemies in the dash direction within a certain range.
 		Enemy[] enemies = [.. EntityManager
@@ -188,6 +192,8 @@ internal class Player(
 		if (enemies.Length == 0) {
 			Position += FaceDirection * DashDistance;
 			DashCooldownRemaining = DashMissCooldown;
+
+			_ = new ParticleTeleport(Position, FaceDirection);
 
 			return;
 		}
@@ -206,6 +212,7 @@ internal class Player(
 			//TODO: AVFX here.
 			if (willKill) SoundPlayer.Play("Player - Dash Kill");
 			else SoundPlayer.Play("Player - Dash Hit");
+			_ = new ParticleTeleport(Position, FaceDirection);
 
 			return;
 		}
