@@ -98,6 +98,7 @@ internal class UIManager {
         Raylib.DrawText(bonusText, screenX + 1, screenY + 1, fontSize, Color.Black);
         Raylib.DrawText(bonusText, screenX, screenY, fontSize, Color.Yellow);
     }
+
     public static void DrawMenu()
     {
         Raylib.DrawText("SUAVE", 420, 180, 120, Color.White);

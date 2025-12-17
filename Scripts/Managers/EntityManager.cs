@@ -177,6 +177,8 @@ internal static class EntityManager {
 		Characters.Clear();
 		Projectiles.Clear();
 		Particles.Clear();
+		RegisterQueue.Clear();
+		UnregisteredEntities.Clear();
 	}
 
 	public static void Update(float deltaTime) {
