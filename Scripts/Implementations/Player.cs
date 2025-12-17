@@ -8,19 +8,12 @@ internal class Player(
 	string name,
 	string entityId,
 	Vector2 position,
-	float hitRadius,
-	int maxHealth,
-	int damage,
-	float attackRange,
-	float attackCooldown,
-	float moveSpeed,
-	float nearMissRange,
-	float damageCooldown,
-	float parryTolerance,
-	float dashDistance,
-	float dashHitCooldown,
-	float dashMissCooldown,
-	float dashHitTolerance
+	float hitRadius = 16f,
+	int maxHealth = 25,
+	int damage = 1,
+	float attackRange = 72f,
+	float attackCooldown = 1f,
+	float moveSpeed = 200f
 	) :
 	Character(
 		name,
@@ -59,9 +52,9 @@ internal class Player(
 
 	public int DamageBonus { get; protected set; } = 0;
 
-	public float NearMissRange { get; protected set; } = nearMissRange;
+	public const float NearMissRange = 50;
 
-	public float DamageCooldown { get; protected set; } = damageCooldown;
+	public const float DamageCooldown = 0.5f;
 
 	private float DamageCooldownRemaining { get; set; } = 0.0f;
 
@@ -163,15 +156,15 @@ internal class Player(
 
 	#region Dashing
 
-	public float DashDistance { get; protected set; } = dashDistance;
+	public const float DashDistance = 160f;
 
-	public float DashHitCooldown { get; protected set; } = dashHitCooldown;
+	public const float DashHitCooldown = 0.1f;
 
-	public float DashMissCooldown { get; protected set; } = dashMissCooldown;
+	public const float DashMissCooldown = 2.0f;
 
 	private float DashCooldownRemaining { get; set; } = 0.0f;
 
-	public float DashHitTolerance { get; protected set; } = dashHitTolerance;
+	public const float DashHitTolerance = 0.9f;
 
 	public const int DashHitDamageBonus = 2;
 
