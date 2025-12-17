@@ -13,6 +13,12 @@ internal static class LevelManager {
 	#region General
 
 	public static void Init() {
+		Levels = [];
+		CurrentLevel = null;
+		CurrentLevelIndex = 0;
+		CurrentWave = 0;
+		DoneSpawningWave = false;
+		LevelTimer = 0.0f;
 		Levels = [
 			// Level 1
 			new Level(

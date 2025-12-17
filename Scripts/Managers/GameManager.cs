@@ -17,6 +17,10 @@ internal static class GameManager {
 	}
 
 	public static void Reset() {
-
+		EntityManager.ClearAllEntities();
+		EntityManager.Player = null;
+		Init();
+		LevelManager.Init();
+		LevelManager.StartLevel(0);
 	}
 }
