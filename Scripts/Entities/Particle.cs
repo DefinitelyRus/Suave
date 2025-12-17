@@ -3,9 +3,11 @@ using Suave.Scripts.Objects;
 
 namespace Suave.Scripts.Entities;
 
-internal abstract class Particle(string name, string entityId, Vector2 position, Animation animation, float lifespan = 5f) : Entity(name, entityId, position) {
+internal abstract class Particle(string name, string entityId, Vector2 position, Vector2 rotation, Animation animation, float lifespan = 5f) : Entity(name, entityId, position) {
 
 	#region General
+
+	public Vector2 Rotation { get; protected set; } = rotation;
 
 	public float Lifespan { get; protected set; } = lifespan;
 
