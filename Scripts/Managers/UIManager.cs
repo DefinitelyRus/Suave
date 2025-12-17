@@ -30,7 +30,7 @@ internal class UIManager {
 	}
 
 	public static void DrawTransition() {
-		Raylib.DrawText($"Level {LevelManager.CurrentLevelIndex}", 420, 180, 120, Color.White);
-		Raylib.DrawText("Loading...", 360, 600, 42, Color.White);
+		Raylib.DrawText($"Level {LevelManager.CurrentLevelIndex}", 420, 180, 120, Color.Black);
+		Raylib.DrawText("Loading...", 360, 600, 42, Color.Black);
 	}
 }
