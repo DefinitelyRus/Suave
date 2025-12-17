@@ -107,6 +107,7 @@ internal static class LevelManager {
 
 		await StateManager.StartTransition();
 
+		CurrentWave = 0;
 		StartWave();
 	}
 
@@ -114,7 +115,7 @@ internal static class LevelManager {
 
 	#region Wave Management
 
-	private static uint CurrentWave { get; set; } = 0;
+	public static uint CurrentWave { get; private set; } = 0;
 
 	private static bool DoneSpawningWave { get; set; } = false;
 
