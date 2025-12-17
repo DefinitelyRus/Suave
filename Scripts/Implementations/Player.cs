@@ -89,13 +89,14 @@ internal class Player(
 		if (distanceToProjectile <= HitRadius) {
 			Log.Me(() => $"Dodge failed! Projectile at distance {distanceToProjectile}.");
 
-			Character self = this;
-			self.TakeDamage(projectile.Owner.Damage);
+			TakeDamage(projectile.Owner.Damage);
+
+			// Reset Damage Bonus
+			int newDamageBonus = DamageBonus - projectile.Owner.Damage * 2;
+			DamageBonus = Math.Max(0, newDamageBonus);
 
 			return;
 		}
-
-		Log.Me(() => $"Near miss detected! Projectile at distance {distanceToProjectile}.");
 
 		// Successful dodge.
 		DamageBonus += 1;
