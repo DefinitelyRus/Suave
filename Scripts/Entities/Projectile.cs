@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Raylib_cs;
 using Suave.Scripts.Managers;
 
 namespace Suave.Scripts.Entities;
@@ -80,6 +81,12 @@ internal class Projectile : PhysicalEntity {
 		Vector2 targetPosition = target.Position;
 		Vector2 directionToTarget = Vector2.Normalize(targetPosition - Position);
 		Launch(directionToTarget);
+	}
+
+	public override void Render(float delta) {
+		// Rotate direction 90 degrees to convert from horizontal sprite orientation to vertical
+		Vector2 rotatedDirection = new(-Direction.Y, Direction.X);
+		SpriteRenderer.Render(CurrentTexture, Position, rotatedDirection, 1f, Color.White);
 	}
 
 	protected void CheckCharacterCollision() {
