@@ -1,7 +1,5 @@
 ﻿using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
 using Raylib_cs;
-using Suave.Scripts.Tools;
 namespace Suave.Scripts.Managers;
 
 internal class InputManager {
