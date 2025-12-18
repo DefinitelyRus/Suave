@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using Raylib_cs;
+using Suave.Scripts.Tools;
 namespace Suave.Scripts.Managers;
 
 internal class InputManager {
@@ -57,18 +59,8 @@ internal class InputManager {
 				if (Raylib.IsKeyPressed(Reset)) GameManager.Reset();
 				break;
 
-			// ----- Won -----
+			// ----- Won/Lost -----
 			case StateManager.States.Win:
-				if (Raylib.IsKeyPressed(Start)) {
-					StateManager.CurrentState = StateManager.States.Menu;
-					GameManager.Reset();
-				}
-
-				if (Raylib.IsKeyPressed(Reset)) GameManager.Reset();
-
-				break;
-
-			// ----- Lost -----
 			case StateManager.States.Lose:
 				if (Raylib.IsKeyPressed(Start)) {
 					StateManager.CurrentState = StateManager.States.Menu;
