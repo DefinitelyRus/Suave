@@ -150,6 +150,12 @@ internal class Player(
 		SoundPlayer.Play("Player - Near Miss");
 	}
 
+	public override void Despawn() {
+		base.Despawn();
+
+		StateManager.CurrentState = StateManager.States.Lose;
+	}
+
 	#endregion
 
 	#region Parrying
