@@ -2,6 +2,7 @@
 using Raylib_cs;
 using Suave.Scripts.Entities;
 using Suave.Scripts.Managers;
+using Suave.Scripts.Objects;
 using Suave.Scripts.Tools;
 namespace Suave.Scripts.Implementations;
 
