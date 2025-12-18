@@ -9,7 +9,7 @@ internal class Animation {
 	public float Duration { get; set; }
 	public float Elapsed { get; private set; } = 0f;
 	public bool IsFinished => !Loop && Elapsed >= Duration;
-	public List<Texture2D> Frames { get; private set; } = [];
+	public List<Texture2D> Frames { get; set; } = [];
 	public Texture2D CurrentTexture { get; private set; }
 
 	public Animation(string name, float duration, bool loop = false) {
@@ -30,6 +30,14 @@ internal class Animation {
 		Duration = duration;
 
 		Log.Err($"No frames found for animation '{name}'.", Frames.Count == 0);
+	}
+
+	/// <summary>
+	/// Manually set the frames for this animation (useful for non-standard naming patterns).
+	/// </summary>
+	public void SetFrames(List<Texture2D> frames) {
+		Frames = frames;
+		Elapsed = 0f;
 	}
 
 	public void Update(float deltaTime) {

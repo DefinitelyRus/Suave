@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Raylib_cs;
 using Suave.Scripts.Entities;
 using Suave.Scripts.Managers;
 using Suave.Scripts.Objects;
@@ -36,6 +37,18 @@ internal class Player(
 			if (DashCooldownRemaining < 0) DashCooldownRemaining = 0;
 		}
 
+		// Update parry animation if active
+		if (CurrentParryAnimation != null) {
+			CurrentParryAnimation.Update(delta);
+			CurrentTexture = CurrentParryAnimation.CurrentTexture;
+			
+			// Reset to idle when animation finishes
+			if (CurrentParryAnimation.IsFinished) {
+				CurrentParryAnimation = null;
+				CurrentTexture = default;
+			}
+		}
+
 		CheckNearMiss(delta);
 
 		base.Update(delta);
@@ -45,6 +58,34 @@ internal class Player(
 		DamageBonus = 0;
 		DamageCooldownRemaining = 3f;
 		DashCooldownRemaining = 0f;
+		CurrentParryAnimation = null;
+	}
+
+	public override void Render(float _) {
+		// If animation is active, render the animation frame; otherwise render normally
+		if (CurrentParryAnimation != null && CurrentTexture.Id != 0) {
+			SpriteRenderer.Render(CurrentTexture, Position, FaceDirection, 0.15f);
+		} else {
+			base.Render(_);
+		}
+
+		// Draw parry range marker only if parry is not on cooldown
+		if (AttackCooldownRemaining <= 0) {
+			// Get the angle of the facing direction in radians
+			float facingAngle = Utilities.GetAngle(FaceDirection) * MathF.PI / 180f;
+			
+			// Draw an arc in front of the player (180 degrees, from -90 to +90 relative to facing direction)
+			int segments = 32;
+			for (int i = 0; i < segments; i++) {
+				float angle1 = facingAngle - MathF.PI / 2 + (MathF.PI / segments) * i;
+				float angle2 = facingAngle - MathF.PI / 2 + (MathF.PI / segments) * (i + 1);
+				
+				Vector2 p1 = Position + new Vector2(MathF.Cos(angle1), MathF.Sin(angle1)) * ParryRange;
+				Vector2 p2 = Position + new Vector2(MathF.Cos(angle2), MathF.Sin(angle2)) * ParryRange;
+				
+				Raylib.DrawLineV(p1, p2, Color.Gold);
+			}
+		}
 	}
 
 	#endregion
@@ -119,6 +160,8 @@ internal class Player(
 
 	private const float ParryHitCooldown = 0.4f;
 
+	private Animation? CurrentParryAnimation { get; set; } = null;
+
 	/// <summary>
 	/// 
 	/// </summary>
@@ -149,6 +192,17 @@ internal class Player(
 
 		// Increase damage bonus by 3x the damage
 		DamageBonus += triple;
+
+		// Start parry animation with Attack-2 and Attack-3 frames
+		List<Texture2D> parryFrames = [
+			ResourceManager.GetTexture("Attack-2"),
+			ResourceManager.GetTexture("Attack-3")
+		];
+		CurrentParryAnimation = new Animation("Parry", ParryHitCooldown * 1.4f, false);
+		// Manually set the frames since we're using non-standard naming
+		if (parryFrames[0].Id != 0 && parryFrames[1].Id != 0) {
+			CurrentParryAnimation.SetFrames(parryFrames);
+		}
 
 		//TODO: AVFX here.
 		SoundPlayer.Play("Player - Parry");
@@ -208,6 +262,17 @@ internal class Player(
 			bool willKill = enemies[0].Health <= totalDamage;
 			enemies[0].TakeDamage(totalDamage);
 			DamageBonus = 0;
+
+			// Start attack animation
+			List<Texture2D> attackFrames = [
+				ResourceManager.GetTexture("Attack-2"),
+				ResourceManager.GetTexture("Attack-3")
+			];
+			CurrentParryAnimation = new Animation("Attack", DashHitCooldown * 1.4f, false);
+			// Manually set the frames since we're using non-standard naming
+			if (attackFrames[0].Id != 0 && attackFrames[1].Id != 0) {
+				CurrentParryAnimation.SetFrames(attackFrames);
+			}
 
 			//TODO: AVFX here.
 			if (willKill) SoundPlayer.Play("Player - Dash Kill");
