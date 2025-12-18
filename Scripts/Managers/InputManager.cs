@@ -64,6 +64,8 @@ internal class InputManager {
 					GameManager.Reset();
 				}
 
+				if (Raylib.IsKeyPressed(Reset)) GameManager.Reset();
+
 				break;
 
 			// ----- Lost -----
@@ -72,6 +74,8 @@ internal class InputManager {
 					StateManager.CurrentState = StateManager.States.Menu;
 					GameManager.Reset();
 				}
+
+				if (Raylib.IsKeyPressed(Reset)) GameManager.Reset();
 
 				break;
 		}
