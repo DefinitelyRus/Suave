@@ -106,6 +106,9 @@ internal static class LevelManager {
 		CurrentLevel = Levels[CurrentLevelIndex];
 		LevelTimer = CurrentLevel.TimeLimit;
 
+		// Update background for the new level
+		GameRenderer.UpdateBackground();
+
 		// Reset player state.
 		Player player = EntityManager.Player!;
 		player.ResetContemporaryValues();
