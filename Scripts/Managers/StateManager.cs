@@ -15,14 +15,15 @@ internal class StateManager {
 	public static States CurrentState {
 		get => _currentState;
 		set {
-			// Stop music when transitioning to Win or Lose states
-			if ((value == States.Win || value == States.Lose) && _currentState == States.Playing) {
-				SoundPlayer.StopMusic();
-			}
-			// Start music when transitioning to Playing state
-			else if (value == States.Playing && _currentState != States.Playing) {
-				SoundPlayer.PlayMusic("Gerudo Valley Remix  Super Smash Bros. Ultimate.wav");
-			}
+			bool isGameEnd = value == States.Win || value == States.Lose;
+			bool isCurrentlyPlaying = _currentState == States.Playing;
+			bool willPlay = value == States.Playing;
+
+			// Stop music when transitioning to game end
+			if (isGameEnd && isCurrentlyPlaying) SoundPlayer.StopMusic();
+			
+			// Start music when transitioning to game start
+			else if (willPlay && !isCurrentlyPlaying) SoundPlayer.PlayMusic("Gerudo Valley Remix  Super Smash Bros. Ultimate.wav");
 
 			_currentState = value;
 		}
