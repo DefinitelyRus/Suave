@@ -174,8 +174,14 @@ internal static class LevelManager {
 	public static float LevelTimer = 0.0f;
 
 	public static void UpdateTimer(float delta) {
+		if (!StateManager.IsPlaying) return;
+
 		LevelTimer -= delta;
-		if (LevelTimer < 0) LevelTimer = 0;
+
+		if (LevelTimer < 0) {
+			LevelTimer = 0;
+			StateManager.CurrentState = StateManager.States.Lose;
+		}
 	}
 
 	#endregion
