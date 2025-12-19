@@ -10,26 +10,19 @@ internal class GameRenderer {
 
 	public const string Title = "Suave";
 
-	public static Texture2D Background { get; private set; } = new();
+	public static Texture2D Background { get; set; } = new();
 
 	public static void Init() {
 		Raylib.InitWindow(SizeX, SizeY, Title);
 		Raylib.SetTargetFPS(FPS);
 		ResourceManager.PreloadAssets();
-		UpdateBackground();
-	}
-
-	public static void UpdateBackground() {
-		// Load background based on current level (1-indexed)
-		uint levelNumber = LevelManager.CurrentLevelIndex + 1;
-		string backgroundName = levelNumber > 1 ? $"Background{levelNumber}" : "Background";
-		Background = ResourceManager.GetTexture(backgroundName);
 	}
 
 	public static void Update(float _) {
 
 		switch (StateManager.CurrentState) {
 			case StateManager.States.Playing:
+				Raylib.ClearBackground(Color.White);
 				Raylib.DrawTexture(Background, 0, 0, Color.White);
 				UIManager.DrawHealthHUD();
 				UIManager.DrawTimerHUD();

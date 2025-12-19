@@ -94,27 +94,25 @@ internal static class LevelManager {
 
 	public static async void StartLevel(int levelIndex = -1) {
 		// Use current level index if none specified.
-		if (levelIndex < 0) levelIndex = (int) ++CurrentLevelIndex;
+		int levelIndexInternal = levelIndex < 0 ? (int) ++CurrentLevelIndex : levelIndex;
 
-		if (levelIndex >= Levels.Length) {
-			Log.Me(() => "All levels complete! Restarting from Level 1.");
+		if (levelIndexInternal >= Levels.Length) {
 			StateManager.CurrentState = StateManager.States.Win;
 			return;
 		}
 
-		CurrentLevelIndex = (uint) levelIndex;
+		CurrentLevelIndex = (uint) levelIndexInternal;
 		CurrentLevel = Levels[CurrentLevelIndex];
 		LevelTimer = CurrentLevel.TimeLimit;
 
-		// Update background for the new level
-		GameRenderer.UpdateBackground();
+		GameRenderer.Background = ResourceManager.GetTexture($"Background {CurrentLevelIndex + 1}");
+
+		await StateManager.StartTransition();
 
 		// Reset player state.
 		Player player = EntityManager.Player!;
 		player.ResetContemporaryValues();
 		player.Position = PlayerSpawnPosition;
-
-		await StateManager.StartTransition();
 
 		CurrentWave = 0;
 		StartWave();
