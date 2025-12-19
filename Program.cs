@@ -17,6 +17,7 @@ internal class Program {
 			float delta = Raylib.GetFrameTime();
 			InputManager.Update(delta);
 			GameRenderer.Update(delta);
+			SoundPlayer.UpdateMusic();
 
 			if (StateManager.IsPlaying) {
 				LevelManager.Update(delta);

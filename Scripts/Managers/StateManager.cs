@@ -10,7 +10,23 @@ internal class StateManager {
 		Transition
 	}
 
-	public static States CurrentState { get; set; } = States.Menu;
+	private static States _currentState = States.Menu;
+
+	public static States CurrentState {
+		get => _currentState;
+		set {
+			// Stop music when transitioning to Win or Lose states
+			if ((value == States.Win || value == States.Lose) && _currentState == States.Playing) {
+				SoundPlayer.StopMusic();
+			}
+			// Start music when transitioning to Playing state
+			else if (value == States.Playing && _currentState != States.Playing) {
+				SoundPlayer.PlayMusic("Gerudo Valley Remix  Super Smash Bros. Ultimate.wav");
+			}
+
+			_currentState = value;
+		}
+	}
 
 	public static bool IsPlaying => CurrentState == States.Playing;
 
