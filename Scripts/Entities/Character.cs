@@ -75,7 +75,7 @@ internal abstract class Character : PhysicalEntity {
 		SoundPlayer.Play(ResourceManager.GetSound("Character - Hurt"));
 		_ = new ParticleCharacterHurt(Position, FaceDirection);
 
-		if (Health < 0) {
+		if (Health <= 0) {
 			Health = 0;
 			Despawn();
 		}
