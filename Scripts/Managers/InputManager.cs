@@ -6,6 +6,7 @@ internal class InputManager {
 	public const KeyboardKey Start = KeyboardKey.Enter;
 	public const KeyboardKey Pause = KeyboardKey.Space;
 	public const KeyboardKey Reset = KeyboardKey.F5;
+	public const KeyboardKey Sprint = KeyboardKey.LeftShift;
 
 	public const MouseButton Parry = MouseButton.Left;
 	public const MouseButton Dash = MouseButton.Right;
@@ -24,6 +25,9 @@ internal class InputManager {
 				if (EntityManager.Player == null) return;
 
 				Vector2 mousePosition = Raylib.GetMousePosition();
+
+				// Sprint
+				EntityManager.Player.IsSprinting = Raylib.IsKeyDown(Sprint);
 
 				// Actions
 				if (Raylib.IsMouseButtonPressed(Parry)) EntityManager.Player.Parry();

@@ -31,6 +31,9 @@ internal class Player(
 
 	#region General
 
+	private const float SprintSpeedMultiplier = 1.5f; // 50% speed increase
+	public bool IsSprinting { get; set; } = false;
+
 	public override void Update(float delta) {
 		if (DashCooldownRemaining > 0) {
 			DashCooldownRemaining -= delta;
@@ -59,6 +62,7 @@ internal class Player(
 		DamageCooldownRemaining = 3f;
 		DashCooldownRemaining = 0f;
 		CurrentParryAnimation = null;
+		IsSprinting = false;
 	}
 
 	public override void Render(float _) {
@@ -154,6 +158,30 @@ internal class Player(
 		base.Despawn();
 
 		StateManager.CurrentState = StateManager.States.Lose;
+	}
+
+	/// <summary>
+	/// Override to apply sprint multiplier to movement speed.
+	/// </summary>
+	public override void MoveTowardsDirection(Vector2 direction, float delta) {
+		float currentMoveSpeed = MoveSpeed;
+		if (IsSprinting) {
+			MoveSpeed *= SprintSpeedMultiplier;
+		}
+		base.MoveTowardsDirection(direction, delta);
+		MoveSpeed = currentMoveSpeed;
+	}
+
+	/// <summary>
+	/// Override to apply sprint multiplier to movement speed.
+	/// </summary>
+	public override void MoveTowardsPosition(Vector2 targetPosition, float delta) {
+		float currentMoveSpeed = MoveSpeed;
+		if (IsSprinting) {
+			MoveSpeed *= SprintSpeedMultiplier;
+		}
+		base.MoveTowardsPosition(targetPosition, delta);
+		MoveSpeed = currentMoveSpeed;
 	}
 
 	#endregion

@@ -16,7 +16,14 @@ internal class GameRenderer {
 		Raylib.InitWindow(SizeX, SizeY, Title);
 		Raylib.SetTargetFPS(FPS);
 		ResourceManager.PreloadAssets();
-		Background = ResourceManager.GetTexture("Background");
+		UpdateBackground();
+	}
+
+	public static void UpdateBackground() {
+		// Load background based on current level (1-indexed)
+		uint levelNumber = LevelManager.CurrentLevelIndex + 1;
+		string backgroundName = levelNumber > 1 ? $"Background{levelNumber}" : "Background";
+		Background = ResourceManager.GetTexture(backgroundName);
 	}
 
 	public static void Update(float _) {
