@@ -79,8 +79,9 @@ internal class UIManager {
     public static void DrawMenu()
     {
         Raylib.DrawText("SUAVE", 420, 180, 120, Color.White);
-        Raylib.DrawText("Press ENTER to start", 360, 600, 42, Color.White);  
+        Raylib.DrawText("Press SPACE to start", 360, 600, 42, Color.White);  
     }
+
     public static void DrawPaused()
     {
         Raylib.DrawText("Game Paused", 350, 100, 86, Color.White);
@@ -100,7 +101,7 @@ internal class UIManager {
 	}
 
 	public static void DrawTransition() {
-		Raylib.DrawText($"Level {LevelManager.CurrentLevelIndex}", 420, 180, 120, Color.Black);
+		Raylib.DrawText($"Level {LevelManager.CurrentLevelIndex + 1}", 420, 180, 120, Color.Black);
 		Raylib.DrawText("Loading...", 360, 600, 42, Color.Black);
 	}
 }
