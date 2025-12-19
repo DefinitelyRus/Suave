@@ -32,7 +32,7 @@ internal static class LevelManager {
 
 			// Level 2
 			new Level(
-				timeLimit: 180f,
+				timeLimit: 120f,
 				waveCount: 2,
 				enemiesToSpawn: [
 					new PackedEnemy(typeof(EnemyGrunt), 2),
@@ -43,7 +43,7 @@ internal static class LevelManager {
 
 			// Level 3
 			new Level(
-				timeLimit: 180f,
+				timeLimit: 150f,
 				waveCount: 3,
 				enemiesToSpawn: [
 					new PackedEnemy(typeof(EnemyBerserker), 2),
