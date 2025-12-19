@@ -31,10 +31,12 @@ internal class InputManager {
 
 				// Movement
 				EntityManager.Player.FaceTowards(mousePosition, delta);
-				if (Raylib.IsKeyDown(Up)) EntityManager.Player.MoveTowardsDirection(new Vector2(0, -1), delta);
-				if (Raylib.IsKeyDown(Down)) EntityManager.Player.MoveTowardsDirection(new Vector2(0, 1), delta);
-				if (Raylib.IsKeyDown(Left)) EntityManager.Player.MoveTowardsDirection(new Vector2(-1, 0), delta);
-				if (Raylib.IsKeyDown(Right)) EntityManager.Player.MoveTowardsDirection(new Vector2(1, 0), delta);
+				bool isMoving = false;
+				if (Raylib.IsKeyDown(Up)) { EntityManager.Player.MoveTowardsDirection(new Vector2(0, -1), delta); isMoving = true; }
+				if (Raylib.IsKeyDown(Down)) { EntityManager.Player.MoveTowardsDirection(new Vector2(0, 1), delta); isMoving = true; }
+				if (Raylib.IsKeyDown(Left)) { EntityManager.Player.MoveTowardsDirection(new Vector2(-1, 0), delta); isMoving = true; }
+				if (Raylib.IsKeyDown(Right)) { EntityManager.Player.MoveTowardsDirection(new Vector2(1, 0), delta); isMoving = true; }
+				if (!isMoving) EntityManager.Player.StopMoving();
 
 				// Options
 				if (Raylib.IsKeyPressed(Pause)) StateManager.TogglePause();

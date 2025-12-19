@@ -248,6 +248,16 @@ internal class Player(
 			.OrderBy(e => Vector2.Distance(Position, e.Position))
 		];
 
+		// If not moving, can only dash away without hitting enemies
+		if (MoveDirection == Vector2.Zero) {
+			Position += FaceDirection * DashDistance;
+			DashCooldownRemaining = DashMissCooldown;
+
+			_ = new ParticleTeleport(Position, FaceDirection);
+
+			return;
+		}
+
 		// Dash normally, apply cooldown.
 		if (enemies.Length == 0) {
 			Position += FaceDirection * DashDistance;

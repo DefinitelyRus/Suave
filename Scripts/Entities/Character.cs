@@ -116,6 +116,10 @@ internal abstract class Character : PhysicalEntity {
 		Position += MoveDirection * MoveSpeed * delta;
 	}
 
+	public void StopMoving() {
+		MoveDirection = Vector2.Zero;
+	}
+
 	/// <summary>
 	/// Move towards the target position.
 	/// </summary>
