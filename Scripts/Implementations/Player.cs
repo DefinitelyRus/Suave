@@ -212,6 +212,14 @@ internal class Player(
 			.OrderBy(p => Vector2.Distance(Position, p.Position))
 		];
 
+		// Animation
+		List<Texture2D> parryFrames = [
+			ResourceManager.GetTexture("Attack-2"),
+			ResourceManager.GetTexture("Attack-3")
+		];
+		CurrentParryAnimation = new Animation("Parry", ParryHitCooldown * 1.4f, false);
+		CurrentParryAnimation.SetFrames(parryFrames);
+
 		// No projectiles to parry.
 		if (projectiles.Length == 0) {
 			Log.Me(() => "Parry failed!");
@@ -231,18 +239,7 @@ internal class Player(
 		// Increase damage bonus by 3x the damage
 		DamageBonus += triple;
 
-		// Start parry animation with Attack-2 and Attack-3 frames
-		List<Texture2D> parryFrames = [
-			ResourceManager.GetTexture("Attack-2"),
-			ResourceManager.GetTexture("Attack-3")
-		];
-		CurrentParryAnimation = new Animation("Parry", ParryHitCooldown * 1.4f, false);
-		// Manually set the frames since we're using non-standard naming
-		if (parryFrames[0].Id != 0 && parryFrames[1].Id != 0) {
-			CurrentParryAnimation.SetFrames(parryFrames);
-		}
-
-		//TODO: AVFX here.
+		// AVFX
 		SoundPlayer.Play("Player - Parry");
 		_ = new ParticleParry(Position, FaceDirection);
 
