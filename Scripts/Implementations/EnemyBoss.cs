@@ -25,7 +25,7 @@ internal class EnemyBoss : Enemy {
 	}
 
 	public override void Attack(Character target) {
-		// TODO: AVFX here.
+		// AVFX
 		if (AttackCooldownRemaining > 0) return;
 		SoundPlayer.Play("Boss - Attack");
 

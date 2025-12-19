@@ -9,10 +9,10 @@ internal class EnemyBetterGrunt : Enemy {
 		entityId: "EnemyGrunt",
 		position: position,
 		hitRadius: 50f,
-		maxHealth: 15,
-		damage: 1,
+		maxHealth: 25,
+		damage: 2,
 		attackRange: 360f,
-		attackCooldown: 0.8f,
+		attackCooldown: 0.7f,
 		moveSpeed: 96f,
 		aggroRange: 400f,
 		avoidRange: 50f
@@ -24,7 +24,7 @@ internal class EnemyBetterGrunt : Enemy {
 	}
 
 	public override void Attack(Character target) {
-		// TODO: AVFX here.
+		// AVFX
 		if (AttackCooldownRemaining > 0) return;
 		SoundPlayer.Play("Better Grunt - Attack");
 

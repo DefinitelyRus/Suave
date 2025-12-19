@@ -10,8 +10,8 @@ internal class EnemySniper : Enemy {
 		entityId: "EnemySniper",
 		position: position,
 		hitRadius: 50f,
-		maxHealth: 10,
-		damage: 5,
+		maxHealth: 20,
+		damage: 15,
 		attackRange: 800f,
 		attackCooldown: 3f,
 		moveSpeed: 48f,
@@ -25,7 +25,7 @@ internal class EnemySniper : Enemy {
 	}
 
 	public override void Attack(Character target) {
-		// TODO: AVFX here.
+		// AVFX
 		if (AttackCooldownRemaining > 0) return;
 		SoundPlayer.Play("Sniper - Attack");
 
