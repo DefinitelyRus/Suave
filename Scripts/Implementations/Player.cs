@@ -275,10 +275,7 @@ internal class Player(
 				ResourceManager.GetTexture("Attack-3")
 			];
 			CurrentParryAnimation = new Animation("Attack", DashHitCooldown * 1.4f, false);
-			// Manually set the frames since we're using non-standard naming
-			if (attackFrames[0].Id != 0 && attackFrames[1].Id != 0) {
-				CurrentParryAnimation.SetFrames(attackFrames);
-			}
+			CurrentParryAnimation.SetFrames(attackFrames);
 
 			//TODO: AVFX here.
 			if (willKill) SoundPlayer.Play("Player - Dash Kill");
