@@ -37,7 +37,11 @@ internal class Player(
 	public override void Update(float delta) {
 		if (DashCooldownRemaining > 0) {
 			DashCooldownRemaining -= delta;
-			if (DashCooldownRemaining < 0) DashCooldownRemaining = 0;
+
+			if (DashCooldownRemaining < 0) {
+				DashCooldownRemaining = 0;
+				LastDashedEnemy = null;
+			}
 		}
 
 		// Update parry animation if active
