@@ -29,7 +29,7 @@ internal class Animation {
 		Loop = loop;
 		Duration = duration;
 
-		Log.Err($"No frames found for animation '{name}'.", Frames.Count == 0);
+		if (Frames.Count == 0) Log.Err($"No frames found for animation '{name}'.");
 	}
 
 	/// <summary>
