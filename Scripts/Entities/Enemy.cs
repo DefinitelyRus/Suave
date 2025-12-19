@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Suave.Scripts.Implementations;
 using Suave.Scripts.Managers;
+using Suave.Scripts.Tools;
 namespace Suave.Scripts.Entities;
 
 internal abstract class Enemy(
@@ -110,6 +111,11 @@ internal abstract class Enemy(
 
 		// Move away from the target character
 		Vector2 directionAwayFromTarget = Vector2.Normalize(Position - targetCharacter.Position);
+
+		// If exactly on top of the target, move upwards
+		if (float.IsNaN(directionAwayFromTarget.X)) directionAwayFromTarget = new Vector2(0, 1);
+
+		// Calculate target position to move towards
 		Vector2 targetPosition = Position + directionAwayFromTarget * AvoidRange * AvoidDistanceBuffer;
 		MoveTowardsPosition(targetPosition, delta * AvoidSpeedMultiplier);
 		return true;
