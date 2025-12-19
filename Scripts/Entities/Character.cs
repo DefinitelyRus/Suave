@@ -48,7 +48,8 @@ internal abstract class Character : PhysicalEntity {
 	}
 
 	public override void Render(float _) {
-		SpriteRenderer.Render(EntityId, Position, FaceDirection, 0.15f);
+		Vector2 renderPosition = Position + new Vector2(0, GetWobbleOffset());
+		SpriteRenderer.Render(EntityId, renderPosition, FaceDirection, 0.15f);
 	}
 
 	public virtual void ResetContemporaryValues() {
@@ -57,6 +58,7 @@ internal abstract class Character : PhysicalEntity {
 		MoveDirection = Vector2.Zero;
 		AttackCooldownRemaining = 0f;
 		Health = MaxHealth;
+		_wobbleTimer = 0f;
 	}
 	#endregion
 
@@ -95,6 +97,11 @@ internal abstract class Character : PhysicalEntity {
 	public Vector2 MoveDirection { get; protected set; } = Vector2.Zero;
 	public float MoveSpeed { get; protected set; }
 
+	// Wobble animation properties
+	private float _wobbleTimer = 0f;
+	private const float WobbleSpeed = 8f; // How fast the wobble oscillates
+	private const float WobbleAmount = 2f; // How far to wobble (in pixels)
+
 	/// <summary>
 	/// Face towards the target position.
 	/// </summary>
@@ -111,9 +118,14 @@ internal abstract class Character : PhysicalEntity {
 		FaceTowards(target.Position, delta);
 	}
 
-	public void MoveTowardsDirection(Vector2 direction, float delta) {
+	public virtual void MoveTowardsDirection(Vector2 direction, float delta) {
 		MoveDirection = Vector2.Normalize(direction);
 		Position += MoveDirection * MoveSpeed * delta;
+		UpdateWobble(delta, true);
+	}
+
+	public void StopMoving() {
+		MoveDirection = Vector2.Zero;
 	}
 
 	/// <summary>
@@ -121,9 +133,29 @@ internal abstract class Character : PhysicalEntity {
 	/// </summary>
 	/// <param name="targetPosition">The position to move towards.</param>
 	/// <param name="delta">The time the current and the previous frame.</param>
-	public void MoveTowardsPosition(Vector2 targetPosition, float delta) {
+	public virtual void MoveTowardsPosition(Vector2 targetPosition, float delta) {
 		MoveDirection = Vector2.Normalize(targetPosition - Position);
 		Position += MoveDirection * MoveSpeed * delta;
+		UpdateWobble(delta, true);
+	}
+
+	/// <summary>
+	/// Updates the wobble animation based on movement state.
+	/// </summary>
+	private void UpdateWobble(float delta, bool isMoving) {
+		if (isMoving) {
+			_wobbleTimer += delta * WobbleSpeed;
+		} else {
+			// Reset wobble when not moving
+			_wobbleTimer = 0f;
+		}
+	}
+
+	/// <summary>
+	/// Gets the wobble offset to apply to the Y position for animation.
+	/// </summary>
+	public float GetWobbleOffset() {
+		return (float)Math.Sin(_wobbleTimer * Math.PI) * WobbleAmount;
 	}
 
 	#endregion

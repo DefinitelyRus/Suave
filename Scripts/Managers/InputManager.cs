@@ -6,6 +6,7 @@ internal class InputManager {
 	public const KeyboardKey Start = KeyboardKey.Enter;
 	public const KeyboardKey Pause = KeyboardKey.Space;
 	public const KeyboardKey Reset = KeyboardKey.F5;
+	public const KeyboardKey Sprint = KeyboardKey.LeftShift;
 
 	public const MouseButton Parry = MouseButton.Left;
 	public const MouseButton Dash = MouseButton.Right;
@@ -25,16 +26,21 @@ internal class InputManager {
 
 				Vector2 mousePosition = Raylib.GetMousePosition();
 
+				// Sprint
+				EntityManager.Player.IsSprinting = Raylib.IsKeyDown(Sprint);
+
 				// Actions
 				if (Raylib.IsMouseButtonPressed(Parry)) EntityManager.Player.Parry();
 				if (Raylib.IsMouseButtonPressed(Dash)) EntityManager.Player.Dash();
 
 				// Movement
 				EntityManager.Player.FaceTowards(mousePosition, delta);
-				if (Raylib.IsKeyDown(Up)) EntityManager.Player.MoveTowardsDirection(new Vector2(0, -1), delta);
-				if (Raylib.IsKeyDown(Down)) EntityManager.Player.MoveTowardsDirection(new Vector2(0, 1), delta);
-				if (Raylib.IsKeyDown(Left)) EntityManager.Player.MoveTowardsDirection(new Vector2(-1, 0), delta);
-				if (Raylib.IsKeyDown(Right)) EntityManager.Player.MoveTowardsDirection(new Vector2(1, 0), delta);
+				bool isMoving = false;
+				if (Raylib.IsKeyDown(Up)) { EntityManager.Player.MoveTowardsDirection(new Vector2(0, -1), delta); isMoving = true; }
+				if (Raylib.IsKeyDown(Down)) { EntityManager.Player.MoveTowardsDirection(new Vector2(0, 1), delta); isMoving = true; }
+				if (Raylib.IsKeyDown(Left)) { EntityManager.Player.MoveTowardsDirection(new Vector2(-1, 0), delta); isMoving = true; }
+				if (Raylib.IsKeyDown(Right)) { EntityManager.Player.MoveTowardsDirection(new Vector2(1, 0), delta); isMoving = true; }
+				if (!isMoving) EntityManager.Player.StopMoving();
 
 				// Options
 				if (Raylib.IsKeyPressed(Pause)) StateManager.TogglePause();

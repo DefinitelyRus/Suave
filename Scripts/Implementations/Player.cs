@@ -31,6 +31,9 @@ internal class Player(
 
 	#region General
 
+	private const float SprintSpeedMultiplier = 1.5f; // 50% speed increase
+	public bool IsSprinting { get; set; } = false;
+
 	public override void Update(float delta) {
 		if (DashCooldownRemaining > 0) {
 			DashCooldownRemaining -= delta;
@@ -59,6 +62,7 @@ internal class Player(
 		DamageCooldownRemaining = 3f;
 		DashCooldownRemaining = 0f;
 		CurrentParryAnimation = null;
+		IsSprinting = false;
 	}
 
 	public override void Render(float _) {
@@ -156,6 +160,30 @@ internal class Player(
 		StateManager.CurrentState = StateManager.States.Lose;
 	}
 
+	/// <summary>
+	/// Override to apply sprint multiplier to movement speed.
+	/// </summary>
+	public override void MoveTowardsDirection(Vector2 direction, float delta) {
+		float currentMoveSpeed = MoveSpeed;
+		if (IsSprinting) {
+			MoveSpeed *= SprintSpeedMultiplier;
+		}
+		base.MoveTowardsDirection(direction, delta);
+		MoveSpeed = currentMoveSpeed;
+	}
+
+	/// <summary>
+	/// Override to apply sprint multiplier to movement speed.
+	/// </summary>
+	public override void MoveTowardsPosition(Vector2 targetPosition, float delta) {
+		float currentMoveSpeed = MoveSpeed;
+		if (IsSprinting) {
+			MoveSpeed *= SprintSpeedMultiplier;
+		}
+		base.MoveTowardsPosition(targetPosition, delta);
+		MoveSpeed = currentMoveSpeed;
+	}
+
 	#endregion
 
 	#region Parrying
@@ -247,6 +275,16 @@ internal class Player(
 			.Where(e => Vector2.Dot(Vector2.Normalize(e.Position - Position), FaceDirection) > DashHitTolerance)
 			.OrderBy(e => Vector2.Distance(Position, e.Position))
 		];
+
+		// If not moving, can only dash away without hitting enemies
+		if (MoveDirection == Vector2.Zero) {
+			Position += FaceDirection * DashDistance;
+			DashCooldownRemaining = DashMissCooldown;
+
+			_ = new ParticleTeleport(Position, FaceDirection);
+
+			return;
+		}
 
 		// Dash normally, apply cooldown.
 		if (enemies.Length == 0) {
