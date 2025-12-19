@@ -10,10 +10,10 @@ internal class EnemyBoss : Enemy {
 		entityId: "EnemyBoss",
 		position: position,
 		hitRadius: 50f,
-		maxHealth: 50,
+		maxHealth: 80,
 		damage: 2,
 		attackRange: 650f,
-		attackCooldown: 0.25f,
+		attackCooldown: 0.1f,
 		moveSpeed: 64f,
 		aggroRange: 1500f,
 		avoidRange: 50f

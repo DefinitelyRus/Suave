@@ -70,7 +70,7 @@ internal static class LevelManager {
 				timeLimit: 180f,
 				waveCount: 1,
 				enemiesToSpawn: [
-					new PackedEnemy(typeof(EnemyBoss), 2),
+					new PackedEnemy(typeof(EnemyBoss), 1),
 					new PackedEnemy(typeof(EnemyBetterGrunt), 8)
 				],
 				"Level 5"
