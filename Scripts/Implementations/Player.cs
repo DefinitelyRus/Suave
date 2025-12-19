@@ -261,10 +261,12 @@ internal class Player(
 
 	public const int DashHitDamageBonus = 2;
 
+	private Enemy? LastDashedEnemy = null;
+
 	public void Dash() {
 		if (DashCooldownRemaining > 0) return;
 
-		//TODO: AVFX here.
+		// AVFX
 		SoundPlayer.Play("Player - Dash");
 		_ = new ParticleDash(Position, FaceDirection);
 
@@ -298,27 +300,45 @@ internal class Player(
 
 		// Dash to the closest enemy
 		else {
+			Enemy enemy = enemies[0];
+
 			Position = enemies[0].Position;
 			DashCooldownRemaining = DashHitCooldown;
 
-			// Damage Enemy
-			int totalDamage = Damage + DamageBonus + DashHitDamageBonus;
-			bool willKill = enemies[0].Health <= totalDamage;
-			enemies[0].TakeDamage(totalDamage);
-			DamageBonus = 0;
+			int totalDamage = 0;
+
+			// Repeated dash on same enemy
+			if (LastDashedEnemy == enemies[0]) {
+				totalDamage = Damage;
+				TakeDamage(Damage * 4); // Take 4x self-damage
+				DamageBonus = 0;
+			}
+
+			// Dash on new enemy
+			else {
+				totalDamage = Damage + DamageBonus + DashHitDamageBonus;
+				LastDashedEnemy = enemies[0];
+
+				int newDamageBonus = totalDamage - enemy.Health;
+				DamageBonus = Math.Max(0, newDamageBonus);
+			}
+
+			bool willKill = enemy.Health <= totalDamage;
+			enemy.TakeDamage(totalDamage);
+
+			// AVFX
+			if (willKill) SoundPlayer.Play("Player - Dash Kill");
+			else SoundPlayer.Play("Player - Dash Hit");
+			_ = new ParticleTeleport(Position, FaceDirection);
 
 			// Start attack animation
 			List<Texture2D> attackFrames = [
 				ResourceManager.GetTexture("Attack-2"),
 				ResourceManager.GetTexture("Attack-3")
 			];
+
 			CurrentParryAnimation = new Animation("Attack", DashHitCooldown * 1.4f, false);
 			CurrentParryAnimation.SetFrames(attackFrames);
-
-			//TODO: AVFX here.
-			if (willKill) SoundPlayer.Play("Player - Dash Kill");
-			else SoundPlayer.Play("Player - Dash Hit");
-			_ = new ParticleTeleport(Position, FaceDirection);
 
 			return;
 		}
