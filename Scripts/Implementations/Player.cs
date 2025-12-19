@@ -222,7 +222,6 @@ internal class Player(
 
 		// No projectiles to parry.
 		if (projectiles.Length == 0) {
-			Log.Me(() => "Parry failed!");
 			AttackCooldownRemaining = ParryMissCooldown;
 			return;
 		}
@@ -231,13 +230,12 @@ internal class Player(
 		Projectile projectile = projectiles[0];
 		projectile.Parry(FaceDirection, this);
 
-		// Heal self for 3x the damage
-		int triple = projectile.Owner.Damage * 3;
-		int newHealth = Math.Min(Health + triple, MaxHealth);
-		Health = Math.Min(Health + triple, MaxHealth);
+		// Heal self
+		int newHealth = Health + projectile.Owner.Damage;
+		Health = Math.Min(newHealth, MaxHealth);
 
 		// Increase damage bonus by 3x the damage
-		DamageBonus += triple;
+		DamageBonus += projectile.Owner.Damage * 3;
 
 		// AVFX
 		SoundPlayer.Play("Player - Parry");
