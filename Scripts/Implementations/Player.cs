@@ -37,23 +37,12 @@ internal class Player(
 	public override void Update(float delta) {
 		if (DashCooldownRemaining > 0) {
 			DashCooldownRemaining -= delta;
-
-			if (DashCooldownRemaining < 0) {
-				DashCooldownRemaining = 0;
-				LastDashedEnemy = null;
-			}
+			if (DashCooldownRemaining < 0) DashCooldownRemaining = 0;
 		}
 
-		// Update parry animation if active
-		if (CurrentParryAnimation != null) {
-			CurrentParryAnimation.Update(delta);
-			CurrentTexture = CurrentParryAnimation.CurrentTexture;
-			
-			// Reset to idle when animation finishes
-			if (CurrentParryAnimation.IsFinished) {
-				CurrentParryAnimation = null;
-				CurrentTexture = default;
-			}
+		if (LastEnemyResetTimeRemaining > 0) {
+			LastEnemyResetTimeRemaining -= delta;
+			if (LastEnemyResetTimeRemaining < 0) LastDashedEnemy = null;
 		}
 
 		CheckNearMiss(delta);
@@ -65,17 +54,23 @@ internal class Player(
 		DamageBonus = 0;
 		DamageCooldownRemaining = 3f;
 		DashCooldownRemaining = 0f;
-		CurrentParryAnimation = null;
+		CurrentAnimation = null;
 		IsSprinting = false;
 	}
 
-	public override void Render(float _) {
-		// If animation is active, render the animation frame; otherwise render normally
-		if (CurrentParryAnimation != null && CurrentTexture.Id != 0) {
-			SpriteRenderer.Render(CurrentTexture, Position, FaceDirection, 0.15f);
-		} else {
-			base.Render(_);
+	public override void Render(float delta) {
+		if (CurrentAnimation == null) CurrentTexture = ResourceManager.GetTexture("Player");
+		else {
+			CurrentAnimation.Update(delta);
+			CurrentTexture = CurrentAnimation.CurrentTexture;
+
+			if (CurrentAnimation.IsFinished) CurrentAnimation = null;
 		}
+
+		Vector2 renderPosition = Position + new Vector2(0, GetWobbleOffset());
+		SpriteRenderer.Render(CurrentTexture, renderPosition, FaceDirection, 0.15f);
+
+		// TODO: Move to UIManager
 
 		// Draw parry range marker only if parry is not on cooldown
 		if (AttackCooldownRemaining <= 0) {
@@ -95,6 +90,12 @@ internal class Player(
 			}
 		}
 	}
+
+	#endregion
+
+	#region Animations
+
+	private Animation? CurrentAnimation { get; set; } = null;
 
 	#endregion
 
@@ -198,8 +199,6 @@ internal class Player(
 
 	private const float ParryHitCooldown = 0.4f;
 
-	private Animation? CurrentParryAnimation { get; set; } = null;
-
 	/// <summary>
 	/// 
 	/// </summary>
@@ -211,14 +210,9 @@ internal class Player(
 			.GetAllEntitiesInRadius<Projectile>(Position, ParryRange)
 			.OrderBy(p => Vector2.Distance(Position, p.Position))
 		];
-
-		// Animation
-		List<Texture2D> parryFrames = [
-			ResourceManager.GetTexture("Attack-2"),
-			ResourceManager.GetTexture("Attack-3")
-		];
-		CurrentParryAnimation = new Animation("Parry", ParryHitCooldown * 1.4f, false);
-		CurrentParryAnimation.SetFrames(parryFrames);
+		
+		LastDashedEnemy = null;
+		CurrentAnimation = new Animation("Player - Attack", ParryHitCooldown * 1.0f, false);
 
 		// No projectiles to parry.
 		if (projectiles.Length == 0) {
@@ -226,16 +220,17 @@ internal class Player(
 			return;
 		}
 
-		// Parry the closest projectile.
-		Projectile projectile = projectiles[0];
-		projectile.Parry(FaceDirection, this);
+		// Parry all projectiles
+		foreach (Projectile projectile in projectiles) {
+			projectile.Parry(FaceDirection, this);
 
-		// Heal self
-		int newHealth = Health + projectile.Owner.Damage;
-		Health = Math.Min(newHealth, MaxHealth);
+			// Heal self
+			int newHealth = Health + projectile.Owner.Damage;
+			Health = Math.Min(newHealth, MaxHealth);
 
-		// Increase damage bonus by 3x the damage
-		DamageBonus += projectile.Owner.Damage * 3;
+			// Increase damage bonus by 3x the damage
+			DamageBonus += projectile.Owner.Damage * 3;
+		}
 
 		// AVFX
 		SoundPlayer.Play("Player - Parry");
@@ -252,13 +247,17 @@ internal class Player(
 
 	public const float DashHitCooldown = 0.1f;
 
-	public const float DashMissCooldown = 2.0f;
+	public const float DashMissCooldown = 2f;
 
-	private float DashCooldownRemaining { get; set; } = 0.0f;
+	private float DashCooldownRemaining { get; set; } = 0f;
 
 	public const float DashHitTolerance = 0.9f;
 
 	public const int DashHitDamageBonus = 2;
+
+	private const float LastEnemyResetTime = 2f;
+
+	private float LastEnemyResetTimeRemaining = 0f;
 
 	private Enemy? LastDashedEnemy = null;
 
@@ -277,20 +276,11 @@ internal class Player(
 			.OrderBy(e => Vector2.Distance(Position, e.Position))
 		];
 
-		// If not moving, can only dash away without hitting enemies
-		if (MoveDirection == Vector2.Zero) {
-			Position += FaceDirection * DashDistance;
-			DashCooldownRemaining = DashMissCooldown;
-
-			_ = new ParticleTeleport(Position, FaceDirection);
-
-			return;
-		}
-
 		// Dash normally, apply cooldown.
 		if (enemies.Length == 0) {
 			Position += FaceDirection * DashDistance;
 			DashCooldownRemaining = DashMissCooldown;
+			LastDashedEnemy = null;
 
 			_ = new ParticleTeleport(Position, FaceDirection);
 
@@ -301,13 +291,14 @@ internal class Player(
 		else {
 			Enemy enemy = enemies[0];
 
-			Position = enemies[0].Position;
+			Position = enemy.Position;
 			DashCooldownRemaining = DashHitCooldown;
 
 			int totalDamage = 0;
 
 			// Repeated dash on same enemy
-			if (LastDashedEnemy == enemies[0]) {
+			if (LastDashedEnemy == enemy) {
+				Log.Me(() => "Repeated dash on same enemy!");
 				totalDamage = Damage;
 				TakeDamage(Damage * 4); // Take 4x self-damage
 				DamageBonus = 0;
@@ -315,33 +306,38 @@ internal class Player(
 
 			// Dash on new enemy
 			else {
+				Log.Me(() => "Dash on new enemy!");
 				totalDamage = Damage + DamageBonus + DashHitDamageBonus;
-				LastDashedEnemy = enemies[0];
 
 				int newDamageBonus = totalDamage - enemy.Health;
 				DamageBonus = Math.Max(0, newDamageBonus);
 			}
 
+			// Set this enemy as last dashed enemy
+			LastDashedEnemy = enemy;
+			LastEnemyResetTimeRemaining = LastEnemyResetTime;
+
 			bool willKill = enemy.Health <= totalDamage;
 			enemy.TakeDamage(totalDamage);
 
-			// AVFX
-			if (willKill) SoundPlayer.Play("Player - Dash Kill");
-			else SoundPlayer.Play("Player - Dash Hit");
+			// AVFX + Heal on kill
+			if (!willKill) SoundPlayer.Play("Player - Dash Hit");
+			else {
+				SoundPlayer.Play("Player - Dash Kill");
+
+				// Heal player for 25% of damage dealt
+				int newHealth = totalDamage / 4;
+				Health = Math.Min(MaxHealth, Health + newHealth);
+			}
+
 			_ = new ParticleTeleport(Position, FaceDirection);
 
-			// Start attack animation
-			List<Texture2D> attackFrames = [
-				ResourceManager.GetTexture("Attack-2"),
-				ResourceManager.GetTexture("Attack-3")
-			];
-
-			CurrentParryAnimation = new Animation("Attack", DashHitCooldown * 1.4f, false);
-			CurrentParryAnimation.SetFrames(attackFrames);
+			CurrentAnimation = new Animation("Player - Attack", DashHitCooldown * 1.4f, false);
 
 			return;
 		}
 	}
 
 	#endregion
+
 }
