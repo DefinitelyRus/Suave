@@ -121,6 +121,12 @@ internal static class LevelManager {
 
 	#region Wave Management
 
+	/// <summary>
+	/// The current wave number within the level.
+	/// </summary>
+	/// <remarks>
+	/// This value starts at 1 for the first wave of a level.
+	/// </remarks>
 	public static uint CurrentWave { get; private set; } = 0;
 
 	private static bool DoneSpawningWave { get; set; } = false;
@@ -144,16 +150,18 @@ internal static class LevelManager {
 		];
 
 		// If enemies remain, do nothing.
-		if (remainingEnemies.Length != 0) return;
+		if (remainingEnemies.Length > 0) return;
 
-		// If no enemies remain, move to next wave or level.
-		if (CurrentWave <= CurrentLevel!.Waves) {
-			StartWave();
+		// If all waves complete, move to next level.
+		if (CurrentWave >= CurrentLevel!.Waves) {
+			Log.Me(() => "Level complete!");
+			StartLevel();
 			return;
 		}
 
-		Log.Me(() => "Level complete!");
-		StartLevel();
+		// Otherwise, move to next wave or level.
+		StartWave();
+		return;
 	}
 
 	#endregion
