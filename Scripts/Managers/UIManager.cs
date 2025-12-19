@@ -50,7 +50,7 @@ internal class UIManager {
 		Raylib.DrawText(waveText, rightX, Padding + 30, FontSize, Color.White);
 	}
 
-	public static void DrawOnPlayerHUD() {
+	public static void DrawDmgBonusCounter() {
         Player? player = EntityManager.Player;
         if (player == null) return;
 		if (player.DamageBonus <= 0) return;
@@ -76,6 +76,28 @@ internal class UIManager {
         Raylib.DrawText(bonusText, screenX, screenY, customSize, Color.Yellow);
     }
 
+	public static void DrawParryRadiusPreview() {
+		Player? player = EntityManager.Player;
+		if (player == null) return;
+
+		if (player.ParryCooldownRemaining > 0) return;
+
+		// Get the angle of the facing direction in radians
+		float facingAngle = Utilities.GetAngle(player.FaceDirection) * MathF.PI / 180f;
+
+		// Draw an arc in front of the player (180 degrees, from -90 to +90 relative to facing direction)
+		int segments = 32;
+		for (int i = 0; i < segments; i++) {
+			float angle1 = facingAngle - MathF.PI / 2 + (MathF.PI / segments) * i;
+			float angle2 = facingAngle - MathF.PI / 2 + (MathF.PI / segments) * (i + 1);
+
+			Vector2 p1 = player.Position + new Vector2(MathF.Cos(angle1), MathF.Sin(angle1)) * player.ParryRange;
+			Vector2 p2 = player.Position + new Vector2(MathF.Cos(angle2), MathF.Sin(angle2)) * player.ParryRange;
+
+			Raylib.DrawLineV(p1, p2, new(1f, 1f, 1f, 0.3f));
+		}
+	}
+
     public static void DrawMenu()
     {
         Raylib.DrawText("SUAVE", 420, 180, 120, Color.White);
@@ -90,13 +112,13 @@ internal class UIManager {
 
     public static void DrawWin()
     {
-        Raylib.DrawText("You Win!", 300, 550, 36, Color.Green);
-        Raylib.DrawText("Press F5 to restart", 360, 600, 42, Color.White);
+        Raylib.DrawText("You Win!", 360, 550, 36, Color.Black);
+        Raylib.DrawText("Press F5 to restart", 360, 600, 42, Color.Black);
     }
 
     public static void DrawLose()
     {
-        Raylib.DrawText("You Lose!", 0, 550, 36, Color.Red);
+        Raylib.DrawText("You Lose!", 360, 550, 36, Color.Red);
         Raylib.DrawText("Press F5 to restart", 360, 600, 42, Color.White);
 	}
 

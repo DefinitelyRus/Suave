@@ -69,26 +69,6 @@ internal class Player(
 
 		Vector2 renderPosition = Position + new Vector2(0, GetWobbleOffset());
 		SpriteRenderer.Render(CurrentTexture, renderPosition, FaceDirection, 0.15f);
-
-		// TODO: Move to UIManager
-
-		// Draw parry range marker only if parry is not on cooldown
-		if (AttackCooldownRemaining <= 0) {
-			// Get the angle of the facing direction in radians
-			float facingAngle = Utilities.GetAngle(FaceDirection) * MathF.PI / 180f;
-			
-			// Draw an arc in front of the player (180 degrees, from -90 to +90 relative to facing direction)
-			int segments = 32;
-			for (int i = 0; i < segments; i++) {
-				float angle1 = facingAngle - MathF.PI / 2 + (MathF.PI / segments) * i;
-				float angle2 = facingAngle - MathF.PI / 2 + (MathF.PI / segments) * (i + 1);
-				
-				Vector2 p1 = Position + new Vector2(MathF.Cos(angle1), MathF.Sin(angle1)) * ParryRange;
-				Vector2 p2 = Position + new Vector2(MathF.Cos(angle2), MathF.Sin(angle2)) * ParryRange;
-				
-				Raylib.DrawLineV(p1, p2, Color.Gold);
-			}
-		}
 	}
 
 	#endregion
@@ -196,6 +176,8 @@ internal class Player(
 	public float ParryRange => AttackRange;
 
 	private float ParryMissCooldown => AttackCooldown;
+
+	public float ParryCooldownRemaining => AttackCooldownRemaining;
 
 	private const float ParryHitCooldown = 0.4f;
 

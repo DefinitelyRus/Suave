@@ -27,7 +27,8 @@ internal class GameRenderer {
 				UIManager.DrawHealthHUD();
 				UIManager.DrawTimerHUD();
 				UIManager.DrawLevelInfo();
-				UIManager.DrawOnPlayerHUD();
+				UIManager.DrawDmgBonusCounter();
+				UIManager.DrawParryRadiusPreview();
 				break;
 
 			case StateManager.States.Paused:
