@@ -10,10 +10,10 @@ internal class EnemyBerserker : Enemy {
 		entityId: "EnemyBerserker",
 		position: position,
 		hitRadius: 50f,
-		maxHealth: 12,
+		maxHealth: 35,
 		damage: 1,
 		attackRange: 450f,
-		attackCooldown: 0.25f,
+		attackCooldown: 0.20f,
 		moveSpeed: 80f,
 		aggroRange: 500f,
 		avoidRange: 150f
@@ -25,7 +25,7 @@ internal class EnemyBerserker : Enemy {
 	}
 
 	public override void Attack(Character target) {
-		// TODO: AVFX here.
+		// AVFX
 		if (AttackCooldownRemaining > 0) return;
 		SoundPlayer.Play("Berserker - Attack");
 

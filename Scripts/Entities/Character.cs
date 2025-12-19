@@ -74,7 +74,7 @@ internal abstract class Character : PhysicalEntity {
 	public void TakeDamage(int amount) {
 		Health -= amount;
 
-		SoundPlayer.Play(ResourceManager.GetSound("Character - Hurt"));
+		SoundPlayer.Play("Character - Hurt");
 		_ = new ParticleCharacterHurt(Position, FaceDirection);
 
 		if (Health <= 0) {
@@ -86,7 +86,7 @@ internal abstract class Character : PhysicalEntity {
 	public override void Despawn() {
 		base.Despawn();
 
-		SoundPlayer.Play(ResourceManager.GetSound("Character - Death"));
+		SoundPlayer.Play("Character - Death");
 	}
 
 	#endregion

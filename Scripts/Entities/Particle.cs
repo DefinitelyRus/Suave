@@ -21,8 +21,6 @@ internal abstract class Particle(string name, string entityId, Vector2 position,
 		Render(delta);
 		Lifespan -= delta;
 
-		Log.Me(() => $"Particle '{Name}' lifespan: {Lifespan}");
-
 		if (Animation.IsFinished) Despawn();
 	}
 

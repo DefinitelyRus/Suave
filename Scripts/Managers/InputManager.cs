@@ -3,8 +3,7 @@ using Raylib_cs;
 namespace Suave.Scripts.Managers;
 
 internal class InputManager {
-	public const KeyboardKey Start = KeyboardKey.Enter;
-	public const KeyboardKey Pause = KeyboardKey.Space;
+	public const KeyboardKey StartPause = KeyboardKey.Space;
 	public const KeyboardKey Reset = KeyboardKey.F5;
 	public const KeyboardKey Sprint = KeyboardKey.LeftShift;
 
@@ -43,36 +42,31 @@ internal class InputManager {
 				if (!isMoving) EntityManager.Player.StopMoving();
 
 				// Options
-				if (Raylib.IsKeyPressed(Pause)) StateManager.TogglePause();
+				if (Raylib.IsKeyPressed(StartPause)) StateManager.TogglePause();
 				if (Raylib.IsKeyPressed(Reset)) GameManager.Reset();
 				break;
 
 			// ----- Main menu -----
 			case StateManager.States.Menu:
-
-				// Start the game
-				if (Raylib.IsKeyPressed(Start)) {
-					LevelManager.StartLevel(0);
-				}
-
+				if (Raylib.IsKeyPressed(StartPause)) LevelManager.StartLevel(0);
 				break;
 
 			// ----- Paused -----
 			case StateManager.States.Paused:
-				if (Raylib.IsKeyPressed(Pause)) StateManager.TogglePause();
+				if (Raylib.IsKeyPressed(StartPause)) StateManager.TogglePause();
 				if (Raylib.IsKeyPressed(Reset)) GameManager.Reset();
 				break;
 
 			// ----- Won/Lost -----
 			case StateManager.States.Win:
 			case StateManager.States.Lose:
-				if (Raylib.IsKeyPressed(Start)) {
+				if (Raylib.IsKeyPressed(StartPause)) {
 					StateManager.CurrentState = StateManager.States.Menu;
 					GameManager.Reset();
+					break;
 				}
 
 				if (Raylib.IsKeyPressed(Reset)) GameManager.Reset();
-
 				break;
 		}
 	}

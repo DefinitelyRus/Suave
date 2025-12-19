@@ -32,7 +32,7 @@ internal static class LevelManager {
 
 			// Level 2
 			new Level(
-				timeLimit: 180f,
+				timeLimit: 120f,
 				waveCount: 2,
 				enemiesToSpawn: [
 					new PackedEnemy(typeof(EnemyGrunt), 2),
@@ -43,7 +43,7 @@ internal static class LevelManager {
 
 			// Level 3
 			new Level(
-				timeLimit: 180f,
+				timeLimit: 150f,
 				waveCount: 3,
 				enemiesToSpawn: [
 					new PackedEnemy(typeof(EnemyBerserker), 2),
@@ -70,7 +70,7 @@ internal static class LevelManager {
 				timeLimit: 180f,
 				waveCount: 1,
 				enemiesToSpawn: [
-					new PackedEnemy(typeof(EnemyBoss), 2),
+					new PackedEnemy(typeof(EnemyBoss), 1),
 					new PackedEnemy(typeof(EnemyBetterGrunt), 8)
 				],
 				"Level 5"
@@ -174,8 +174,14 @@ internal static class LevelManager {
 	public static float LevelTimer = 0.0f;
 
 	public static void UpdateTimer(float delta) {
+		if (!StateManager.IsPlaying) return;
+
 		LevelTimer -= delta;
-		if (LevelTimer < 0) LevelTimer = 0;
+
+		if (LevelTimer < 0) {
+			LevelTimer = 0;
+			StateManager.CurrentState = StateManager.States.Lose;
+		}
 	}
 
 	#endregion

@@ -37,7 +37,11 @@ internal class Player(
 	public override void Update(float delta) {
 		if (DashCooldownRemaining > 0) {
 			DashCooldownRemaining -= delta;
-			if (DashCooldownRemaining < 0) DashCooldownRemaining = 0;
+
+			if (DashCooldownRemaining < 0) {
+				DashCooldownRemaining = 0;
+				LastDashedEnemy = null;
+			}
 		}
 
 		// Update parry animation if active
@@ -208,9 +212,16 @@ internal class Player(
 			.OrderBy(p => Vector2.Distance(Position, p.Position))
 		];
 
+		// Animation
+		List<Texture2D> parryFrames = [
+			ResourceManager.GetTexture("Attack-2"),
+			ResourceManager.GetTexture("Attack-3")
+		];
+		CurrentParryAnimation = new Animation("Parry", ParryHitCooldown * 1.4f, false);
+		CurrentParryAnimation.SetFrames(parryFrames);
+
 		// No projectiles to parry.
 		if (projectiles.Length == 0) {
-			Log.Me(() => "Parry failed!");
 			AttackCooldownRemaining = ParryMissCooldown;
 			return;
 		}
@@ -219,26 +230,14 @@ internal class Player(
 		Projectile projectile = projectiles[0];
 		projectile.Parry(FaceDirection, this);
 
-		// Heal self for 3x the damage
-		int triple = projectile.Owner.Damage * 3;
-		int newHealth = Math.Min(Health + triple, MaxHealth);
-		Health = Math.Min(Health + triple, MaxHealth);
+		// Heal self
+		int newHealth = Health + projectile.Owner.Damage;
+		Health = Math.Min(newHealth, MaxHealth);
 
 		// Increase damage bonus by 3x the damage
-		DamageBonus += triple;
+		DamageBonus += projectile.Owner.Damage * 3;
 
-		// Start parry animation with Attack-2 and Attack-3 frames
-		List<Texture2D> parryFrames = [
-			ResourceManager.GetTexture("Attack-2"),
-			ResourceManager.GetTexture("Attack-3")
-		];
-		CurrentParryAnimation = new Animation("Parry", ParryHitCooldown * 1.4f, false);
-		// Manually set the frames since we're using non-standard naming
-		if (parryFrames[0].Id != 0 && parryFrames[1].Id != 0) {
-			CurrentParryAnimation.SetFrames(parryFrames);
-		}
-
-		//TODO: AVFX here.
+		// AVFX
 		SoundPlayer.Play("Player - Parry");
 		_ = new ParticleParry(Position, FaceDirection);
 
@@ -261,10 +260,12 @@ internal class Player(
 
 	public const int DashHitDamageBonus = 2;
 
+	private Enemy? LastDashedEnemy = null;
+
 	public void Dash() {
 		if (DashCooldownRemaining > 0) return;
 
-		//TODO: AVFX here.
+		// AVFX
 		SoundPlayer.Play("Player - Dash");
 		_ = new ParticleDash(Position, FaceDirection);
 
@@ -298,30 +299,45 @@ internal class Player(
 
 		// Dash to the closest enemy
 		else {
+			Enemy enemy = enemies[0];
+
 			Position = enemies[0].Position;
 			DashCooldownRemaining = DashHitCooldown;
 
-			// Damage Enemy
-			int totalDamage = Damage + DamageBonus + DashHitDamageBonus;
-			bool willKill = enemies[0].Health <= totalDamage;
-			enemies[0].TakeDamage(totalDamage);
-			DamageBonus = 0;
+			int totalDamage = 0;
+
+			// Repeated dash on same enemy
+			if (LastDashedEnemy == enemies[0]) {
+				totalDamage = Damage;
+				TakeDamage(Damage * 4); // Take 4x self-damage
+				DamageBonus = 0;
+			}
+
+			// Dash on new enemy
+			else {
+				totalDamage = Damage + DamageBonus + DashHitDamageBonus;
+				LastDashedEnemy = enemies[0];
+
+				int newDamageBonus = totalDamage - enemy.Health;
+				DamageBonus = Math.Max(0, newDamageBonus);
+			}
+
+			bool willKill = enemy.Health <= totalDamage;
+			enemy.TakeDamage(totalDamage);
+
+			// AVFX
+			if (willKill) SoundPlayer.Play("Player - Dash Kill");
+			else SoundPlayer.Play("Player - Dash Hit");
+			_ = new ParticleTeleport(Position, FaceDirection);
 
 			// Start attack animation
 			List<Texture2D> attackFrames = [
 				ResourceManager.GetTexture("Attack-2"),
 				ResourceManager.GetTexture("Attack-3")
 			];
-			CurrentParryAnimation = new Animation("Attack", DashHitCooldown * 1.4f, false);
-			// Manually set the frames since we're using non-standard naming
-			if (attackFrames[0].Id != 0 && attackFrames[1].Id != 0) {
-				CurrentParryAnimation.SetFrames(attackFrames);
-			}
 
-			//TODO: AVFX here.
-			if (willKill) SoundPlayer.Play("Player - Dash Kill");
-			else SoundPlayer.Play("Player - Dash Hit");
-			_ = new ParticleTeleport(Position, FaceDirection);
+			CurrentParryAnimation = new Animation("Attack", DashHitCooldown * 1.4f, false);
+			CurrentParryAnimation.SetFrames(attackFrames);
 
 			return;
 		}
