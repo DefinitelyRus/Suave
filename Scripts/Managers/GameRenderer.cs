@@ -31,7 +31,10 @@ internal class GameRenderer {
 		switch (StateManager.CurrentState) {
 			case StateManager.States.Playing:
 				Raylib.DrawTexture(Background, 0, 0, Color.White);
-				UIManager.DrawHUD();
+				UIManager.DrawHealthHUD();
+				UIManager.DrawTimerHUD();
+				UIManager.DrawLevelInfo();
+				UIManager.DrawOnPlayerHUD();
 				break;
 
 			case StateManager.States.Paused:
