@@ -1,7 +1,9 @@
 # Suave
-> ***Do** bring a knife to a gunfight.*
+> Bring a knife to a gunfight.
 
 A 2D top-down game where you dodge projectiles, gain damage bonus, and defeat your enemies with finesse.
+
+<image src="Screenieboo.jpg" alt="Suave Screenshot" width="600"/>
 
 ## Game Mechanics
 ### The player can
